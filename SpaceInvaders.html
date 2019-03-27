@@ -1,0 +1,148 @@
+<html>
+<head>
+	<style>
+	*{padding: 0; margin:0;}
+	canvas{ background: #eee; display: block; margin: 0 auto;}
+	</style>
+</head>
+
+<body>
+<canvas id= "myCanvas" width="800" height="600"></canvas>
+<script type="text/javascript">
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+var lP = false;
+var rP = false;
+var aP = false;
+var dP = false;
+var charX = 400;
+var charY = 500;
+var angleA = 180;
+var angleB = 90;
+var angleC = 0;
+
+function keyDownHandler(e){
+	if(e.keyCode == 39){
+	rP = true;
+	}
+	else if(e.keyCode == 37)
+	{
+	lP = true;
+	}
+	if(e.keyCode == 65){
+	aP = true;
+	}
+	else if(e.keyCode == 68)
+	{
+	dP = true;
+	}
+}
+function keyUpHandler(e){
+	if(e.keyCode == 39){
+	rP = false;
+	}
+	else if(e.keyCode == 37)
+	{
+	lP = false;
+	}
+	if(e.keyCode == 65){
+	aP = false;
+	}
+	else if(e.keyCode == 68)
+	{
+	dP = false;
+	}
+}
+
+function drawPlayer()
+{
+		ctx.beginPath();
+		ctx.strokeStyle = "red";
+		ctx.moveTo(charX + (Math.cos(angleA) * 50), charY + (Math.sin(angleA) * 50));
+		ctx.lineTo(charX + (Math.cos(angleB) * 50), charY + (Math.sin(angleB) * 50));
+		ctx.stroke();
+		ctx.beginPath();
+		ctx.strokeStyle = "red";
+		ctx.moveTo(charX + (Math.cos(angleA) * 50), charY + (Math.sin(angleA) * 50));
+		ctx.lineTo(charX + (Math.cos(angleC) * 50), charY + (Math.sin(angleC) * 50));
+		ctx.stroke();
+		ctx.beginPath();
+		ctx.strokeStyle = "red";
+		ctx.moveTo(charX + (Math.cos(angleC) * 50), charY + (Math.sin(angleC) * 50));
+		ctx.lineTo(charX + (Math.cos(angleB) * 50), charY + (Math.sin(angleB) * 50));
+		ctx.stroke();
+}
+
+function controls()
+{
+if(dP)
+{
+	if(angleA + .01 < 0)
+{
+	angleA = angleA + .01;
+}
+else
+{
+	angleA = (angleA + .01)%360;
+}
+if(angleB + .01 < 0)
+{
+	angleB = angleB + .01;
+}
+else
+{
+	angleB = (angleB + .01)%360;
+}
+if(angleC + .01 < 0)
+{
+	angleC = angleC + .01;
+}
+else
+{
+	angleC = (angleC + .01)%360;
+}	
+}
+
+
+if(aP)
+{
+	if(angleA -.01 < 0)
+{
+	angleA = angleA -.01;
+}
+else
+{
+	angleA = (angleA -.01)%360;
+}
+if(angleB -.01 < 0)
+{
+	angleB = angleB -.01;
+}
+else
+{
+	angleB = (angleB -.01)%360;
+}
+if(angleC -.01 < 0)
+{
+	angleC = angleC -.01;
+}
+else
+{
+	angleC = (angleC -.01)%360;
+}
+}
+}
+
+
+function draw()
+{
+ctx.clearRect(0, 0, 800, 600);
+drawPlayer();
+controls();
+}
+setInterval(draw, 2);
+</script>
+</body>
+</html>
