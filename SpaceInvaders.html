@@ -18,12 +18,17 @@ var rP = false;
 var aP = false;
 var dP = false;
 var spaceP = false;
+var canFire = true;
 var charX = 400;
 var charY = 500;
 var angleA = 180;
 var angleB = 90;
 var angleC = 0;
 var bullets = [];
+var enemies = [];
+
+var monster = new Image();
+monster.src = "alien1.png";
 
 function Bullet(x, y, angle, speed)
 {
@@ -33,15 +38,69 @@ function Bullet(x, y, angle, speed)
 	this.speed = speed;
 }
 
+function Enemy(x, y, type, img, src)
+{
+	this.x = x;
+	this.y = y;
+	this.type = type;
+	this.image = img;
+	this.source = src;
+}
+
+var t = 1;
+var y1 = 30;
+var x1 = 30;
+for(var a = 1; a < 96; a++)
+{
+	if(a%24 == 0)
+	{
+		t++;
+		y1+=30;
+		console.log("Type now is: " + t);
+	}
+	var s = "";
+		if(t == 1)
+		{
+			s = "alien1.png";
+		}
+		if(t == 2)
+		{
+			s = "alien2.png";
+		}
+		if(t == 3)
+		{
+			s = "alien3.png";
+		}
+		if(t == 4)
+		{
+			s = "alien4.png";
+		}
+	x1 = 30 + ((a%24) * 30);
+	var i = new Image();
+	console.log("Enemy x: " + x1 + "  Enemy y: " + y1 + "  Enemy type: " + t);
+	enemies.push(new Enemy(x1, y1, t, i,s));
+}
+
+function drawEnemies()
+{
+	for(var a = 0; a < enemies.length; a++)
+	{
+		var image1 = new Image();
+		image1.src = enemies[a].source;
+		ctx.drawImage(image1, enemies[a].x, enemies[a].y);
+	}
+}
+
 function fireBullets()
 {
-	if(spaceP)
+	if(spaceP && canFire)
 	{
 		var x1 = charX + (Math.cos(angleA) * 50);
 		var y1 = charY + (Math.sin(angleA) * 50);
 		var a1 = angleA;
 		var s1 = 1;
 		bullets.push(new Bullet(x1, y1, a1, s1));
+		canFire = false;
 	}
 }
 
@@ -57,6 +116,11 @@ function drawBullets()
 		ctx.stroke();
 		bullets[a].x += Math.cos(bullets[a].angle) * bullets[a].speed;
 		bullets[a].y += Math.sin(bullets[a].angle) * bullets[a].speed;
+		if(bullets[a].x > 800 || bullets[a].x < 0 ||bullets[a].y > 600 || bullets[a].y < 0)
+		{
+			bullets.splice(a, 1);
+			a--;
+		}
 	}
 }
 
@@ -184,6 +248,10 @@ else
 }
 }
 
+function fireRate()
+{
+	canFire = true;
+}
 
 function draw()
 {
@@ -192,8 +260,10 @@ drawPlayer();
 controls();
 fireBullets();
 drawBullets();
+drawEnemies();
 }
 setInterval(draw, 2);
+setInterval(fireRate, 100);
 </script>
 </body>
 </html>
