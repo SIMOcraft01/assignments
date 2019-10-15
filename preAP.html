@@ -1,0 +1,105 @@
+<html>
+<head>
+	<style>
+	*{padding: 0; margin:0;}
+	canvas{ background: #eee; display: block; margin: 0 auto;}
+	</style>
+</head>
+
+<body>
+<canvas id= "myCanvas" width="800" height="600"></canvas>
+<script type="text/javascript">
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+
+var blockX = 1;
+var blockY = 1;
+var blockWidth = 50;
+var blockHeight = 30;
+var blockXSpeed = 2;
+var blockYSpeed = 2;
+var color = "rgb(0, 255, 0)";
+var blocks = [];
+var numBlocks = 255;
+
+function Block(x1, y1, w1, h1, xS1, yS1, r1, g1, b1, numHits1)
+{
+	this.x = x1;
+	this.y = y1;
+	this.w = w1;
+	this.h = h1;
+	this.xS = xS1;
+	this.yS = yS1;
+	this.r = r1;
+	this.g = g1;
+	this.b = b1;
+	this.numHits = numHits1;
+}
+
+for(var i = 0; i < numBlocks; i++)
+{
+	var x = Math.floor(Math.random() * 800);
+	var y = Math.floor(Math.random() * 600);
+	var w = Math.floor(Math.random() * 40) + 5;
+	var h = Math.floor(Math.random() * 40) + 5;
+	var xS = Math.floor(Math.random() * 4) + 1;
+	var yS = Math.floor(Math.random() * 4) + 1;
+	var r = Math.floor(Math.random() * 256);
+	var g = Math.floor(Math.random() * 256);
+	var b = Math.floor(Math.random() * 256);
+	var numHits = 0;
+	blocks[i] = new Block(x,y,w,h,xS,yS,r,g,b,numHits);
+}
+
+function drawBlock()
+{
+	for(var i = 0; i < numBlocks; i++)
+	{
+		color = "rgb(" + blocks[i].r + ", " + blocks[i].g + ", " + blocks[i].b + ")";
+		ctx.fillStyle = color;
+		ctx.fillRect(blocks[i].x, blocks[i].y, blocks[i].w, blocks[i].h);
+	}
+}
+
+function movement()
+{
+	blockX += blockXSpeed;
+	blockY += blockYSpeed;
+}
+
+function collision()
+{
+//"rgb(0, 255, 0)"
+	if(blockX <= 0 || blockX + blockWidth >=  800)
+	{
+		blockXSpeed = -1 * blockXSpeed;
+		var r = Math.floor(Math.random() * 256);
+		var g = Math.floor(Math.random() * 256);
+		var b = Math.floor(Math.random() * 256);
+		color = "rgb(" + r + ", " + g + ", " + b + ")";
+		//blockXSpeed *= -1;
+	}
+	if(blockY <= 0 || blockY + blockHeight >=  600)
+	{
+		blockYSpeed = -1 * blockYSpeed;
+		var r = Math.floor(Math.random() * 256);
+		var g = Math.floor(Math.random() * 256);
+		var b = Math.floor(Math.random() * 256);
+		color = "rgb(" + r + ", " + g + ", " + b + ")";
+		//blockYSpeed *= -1;
+	}
+}
+
+function draw()
+{
+	ctx.clearRect(0,0,800,600);
+	drawBlock();
+	movement();
+	collision();
+}
+
+setInterval(draw, 2);
+
+</script>
+</body>
+</html>
