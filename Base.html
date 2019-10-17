@@ -1,0 +1,318 @@
+<html>
+<head>
+	<style>
+	*{padding: 0; margin:0;}
+	canvas{ background: #eee; display: block; margin: 0 auto;}
+	</style>
+</head>
+
+<body>
+<canvas id= "myCanvas" width="800" height="600"></canvas>
+<script type="text/javascript">
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+
+var ballX = 400;
+var ballY = 300;
+var ballXSpeed = 2;
+var ballYSpeed = 2;
+var ballRadius = 30;
+var paddleX = 400;
+var paddleY = 590;
+var paddleW = 150;
+var paddleH = 10;
+var paddleSpeed = 2;
+var leftPressed = false;
+var rightPressed = false;
+var numRows = 5;
+var numCols = 14;
+var leftSide = false;
+var rightSide = false;
+var topSide = false;
+var bottomSide = false;
+
+function Block(x1 , y1, w1, h1, hit1)
+{
+	this.x = x1;
+	this.y = y1;
+	this.w = w1;
+	this.h = h1;
+	this.hit = hit1;
+	this.r = Math.floor(Math.random()*256);
+	this.g = Math.floor(Math.random()*256);
+	this.b = Math.floor(Math.random()*256);
+}
+
+//var block1 = new Block(100, 100, 50, 50, false);
+var blocks = [];
+for(var a = 0; a < numRows; a++)
+{
+	blocks[a] = [];
+}
+
+for(var a = 0; a < numRows; a++)
+{
+	for(var b = 0; b < numCols; b++)
+	{
+		var x = 50 + (b * 50);
+		var y = 50 + (a * 50);
+		var w = 50;
+		var h = 25;
+		blocks[a][b] = new Block(x, y, w, h, false);
+	}
+}
+
+function drawBlocks()
+{
+	for(var a = 0; a < numRows; a++)
+	{
+		for(var b = 0; b < numCols; b++)
+		{
+		//"rgb(0,0,255)";
+			var color = "rgb(" + blocks[a][b].r +
+			"," + blocks[a][b].g +
+			"," + blocks[a][b].b + ")";
+			ctx.fillStyle = color;
+			ctx.fillRect(blocks[a][b].x, blocks[a][b].y, blocks[a][b].w, blocks[a][b].h);
+		}
+	}
+}
+
+function keyDownHandler(e){
+	if(e.keyCode == 39)
+	{
+		rightPressed = true;
+	}
+	else if(e.keyCode == 37)
+	{
+		leftPressed = true;
+	}
+}
+
+function keyUpHandler(e){
+	if(e.keyCode == 39)
+	{
+		rightPressed = false;
+	}
+	else if(e.keyCode == 37)
+	{
+		leftPressed = false;
+	}
+}
+
+function drawBall()
+{
+ctx.beginPath();
+ctx.fillStyle = "rgb(0,255,0)";
+ctx.arc(ballX, ballY, ballRadius, 0, 2 * Math.PI);
+ctx.stroke();
+ctx.fill();
+ballX += ballXSpeed;
+ballY += ballYSpeed;
+}
+
+function drawPaddle()
+{
+	ctx.fillStyle = "rgb(0,0,255)";
+	ctx.fillRect(paddleX, paddleY, paddleW, paddleH);
+}
+
+function collision()
+{
+
+for(var a = 0; a < numRows; a++)
+	{
+		for(var b = 0; b < numCols; b++)
+		{
+			var testX = ballX; //cx = ballX
+			var testY = ballY; // cy = ballY
+			if (ballX < blocks[a][b].x)         
+			{
+			testX = blocks[a][b].x;      // test left edge
+			}
+			else if (ballX > blocks[a][b].x + blocks[a][b].w) 
+			{
+			testX = blocks[a][b].x+blocks[a][b].w;   // right edge
+			}
+			if (ballY < blocks[a][b].y)
+			{
+			testY = blocks[a][b].y;      // top edge
+			}
+			else if (ballY > blocks[a][b].y + blocks[a][b].h) 
+			{
+			testY = blocks[a][b].y+blocks[a][b].h;   // bottom edge
+			}
+			var distX = ballX-testX;
+			var distY = ballY-testY;
+			var distance = Math.sqrt( (distX*distX) + (distY*distY) );
+			if (distance <= ballRadius) {
+			///check if it collides with each box
+			///we will start with the top.
+				var testX = ballX; //cx = ballX
+				var testY = ballY; // cy = ballY
+				if (ballX < blocks[a][b].x)         
+				{
+				testX = blocks[a][b].x;      // test left edge
+				}
+				else if (ballX > blocks[a][b].x + blocks[a][b].w) 
+				{
+				testX = blocks[a][b].x+blocks[a][b].w;   // right edge
+				}
+				if (ballY < blocks[a][b].y)
+				{
+				testY = blocks[a][b].y;      // top edge
+				}
+				else if (ballY > blocks[a][b].y + 3) 
+				{
+				testY = blocks[a][b].y + 3;   // bottom edge
+				}
+				var distX = ballX-testX;
+				var distY = ballY-testY;
+				var distance = Math.sqrt( (distX*distX) + (distY*distY) );
+				if (distance <= ballRadius) {
+				///a collision has happened with top box
+				ballYSpeed *= -1;
+				}
+				////second sub-box collision BOTTOM
+				if (ballX < blocks[a][b].x)         
+				{
+				testX = blocks[a][b].x;      // test left edge
+				}
+				else if (ballX > blocks[a][b].x + blocks[a][b].w) 
+				{
+				testX = blocks[a][b].x+blocks[a][b].w;   // right edge
+				}
+				if (ballY < blocks[a][b].y + blocks[a][b].h - 3)
+				{
+				testY = blocks[a][b].y  + blocks[a][b].h - 3;      // top edge
+				}
+				else if (ballY > blocks[a][b].y + blocks[a][b].h) 
+				{
+				testY = blocks[a][b].y + blocks[a][b].h;   // bottom edge
+				}
+				var distX = ballX-testX;
+				var distY = ballY-testY;
+				var distance = Math.sqrt( (distX*distX) + (distY*distY) );
+				if (distance <= ballRadius) {
+				///a collision has happened with bottom box
+				ballYSpeed *= -1;
+				}
+				///Left box
+				if (ballX < blocks[a][b].x)         
+				{
+				testX = blocks[a][b].x;      // test left edge
+				}
+				else if (ballX > blocks[a][b].x + 3) 
+				{
+				testX = blocks[a][b].x + 3;   // right edge
+				}
+				if (ballY < blocks[a][b].y + 3)
+				{
+				testY = blocks[a][b].y  + 3;      // top edge
+				}
+				else if (ballY > blocks[a][b].y + blocks[a][b].h - 3) 
+				{
+				testY = blocks[a][b].y + blocks[a][b].h - 3;   // bottom edge
+				}
+				var distX = ballX-testX;
+				var distY = ballY-testY;
+				var distance = Math.sqrt( (distX*distX) + (distY*distY) );
+				if (distance <= ballRadius) {
+				///a collision has happened with bottom box
+				ballXSpeed *= -1;
+				}
+				///right box
+				if (ballX < blocks[a][b].x + blocks[a][b].w - 3)         
+				{
+				testX = blocks[a][b].x + blocks[a][b].w - 3;      // test left edge
+				}
+				else if (ballX > blocks[a][b].x + blocks[a][b].w) 
+				{
+				testX = blocks[a][b].x + blocks[a][b].w;   // right edge
+				}
+				if (ballY < blocks[a][b].y + 3)
+				{
+				testY = blocks[a][b].y  + 3;      // top edge
+				}
+				else if (ballY > blocks[a][b].y + blocks[a][b].h - 3) 
+				{
+				testY = blocks[a][b].y + blocks[a][b].h - 3;   // bottom edge
+				}
+				var distX = ballX-testX;
+				var distY = ballY-testY;
+				var distance = Math.sqrt( (distX*distX) + (distY*distY) );
+				if (distance <= ballRadius) {
+				///a collision has happened with bottom box
+				ballXSpeed *= -1;
+				}
+			}
+		}
+	}
+	
+if(ballX - ballRadius < 0 || ballX + ballRadius > 800)
+{
+	ballXSpeed = -1 * ballXSpeed;
+}
+if(ballY - ballRadius < 0 || ballY + ballRadius > 600)
+{
+	ballYSpeed = -1 * ballYSpeed;
+}
+
+//The following code was borrowed and altered from
+//http://jeffreythompson.org/collision-detection/circle-rect.php
+
+  // temporary variables to set edges for testing
+  var testX = ballX; //cx = ballX
+  var testY = ballY; // cy = ballY
+
+  // which edge is closest? rx = paddleX
+  //ry == paddleY, rx = paddleW, rh = paddleH
+  if (ballX < paddleX)         testX = paddleX;      // test left edge
+  else if (ballX > paddleX+paddleW) testX = paddleX+paddleW;   // right edge
+  if (ballY < paddleY)         testY = paddleY;      // top edge
+  else if (ballY > paddleY+paddleH) testY = paddleY+paddleH;   // bottom edge
+
+  // get distance from closest edges
+  var distX = ballX-testX;
+  var distY = ballY-testY;
+  var distance = Math.sqrt( (distX*distX) + (distY*distY) );
+
+  // if the distance is less than the radius, collision!
+  if (distance <= ballRadius) {
+    ///a collision has happened....
+	ballYSpeed = -1 * ballYSpeed;
+  }
+}
+
+function movement()
+{
+if(leftPressed == true && paddleX >= 0)
+{
+	paddleX = paddleX - paddleSpeed;
+	///paddleX -= paddleSpeed;
+}
+if(rightPressed == true && (paddleX+ paddleW) <= 800)
+{
+	paddleX = paddleX + paddleSpeed;
+	///paddleX += paddleSpeed;
+}
+}
+
+function draw()
+{
+ctx.clearRect(0,0,800,600);
+drawBall();
+collision();
+drawPaddle();
+movement();
+drawBlocks();
+}
+
+setInterval(draw, 2);
+
+
+</script>
+</body>
+</html>
