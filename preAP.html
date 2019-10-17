@@ -20,7 +20,12 @@ var blockXSpeed = 2;
 var blockYSpeed = 2;
 var color = "rgb(0, 255, 0)";
 var blocks = [];
-var numBlocks = 255;
+var numBlocks = 100;
+var pX = 400;
+var pY = 300;
+var pXspeed = 1;
+var pYspeed = 1;
+
 
 function Block(x1, y1, w1, h1, xS1, yS1, r1, g1, b1, numHits1)
 {
@@ -38,12 +43,20 @@ function Block(x1, y1, w1, h1, xS1, yS1, r1, g1, b1, numHits1)
 
 for(var i = 0; i < numBlocks; i++)
 {
-	var x = Math.floor(Math.random() * 800);
-	var y = Math.floor(Math.random() * 600);
+	var x = Math.floor(Math.random() * 750) + 25;
+	var y = Math.floor(Math.random() * 550) + 25;
 	var w = Math.floor(Math.random() * 40) + 5;
 	var h = Math.floor(Math.random() * 40) + 5;
-	var xS = Math.floor(Math.random() * 4) + 1;
-	var yS = Math.floor(Math.random() * 4) + 1;
+	var xS = ((Math.random() * 60)*.1) - 3;
+	while(xS == 0)
+	{
+		xS = ((Math.random() * 60)*.1) - 3;
+	}
+	var yS = ((Math.random() * 60)*.1) - 3;
+	while(yS == 0)
+	{
+		yS = ((Math.random() * 60)*.1) - 3;
+	}
 	var r = Math.floor(Math.random() * 256);
 	var g = Math.floor(Math.random() * 256);
 	var b = Math.floor(Math.random() * 256);
@@ -58,43 +71,51 @@ function drawBlock()
 		color = "rgb(" + blocks[i].r + ", " + blocks[i].g + ", " + blocks[i].b + ")";
 		ctx.fillStyle = color;
 		ctx.fillRect(blocks[i].x, blocks[i].y, blocks[i].w, blocks[i].h);
+		blocks[i].x += blocks[i].xS;
+		blocks[i].y += blocks[i].yS;
+		if(blocks[i].x <= 0 || blocks[i].x + blocks[i].w >=  800)
+		{
+			blocks[i].xS  = -1 * blocks[i].xS;
+			///blocks[i].xS *= -1;
+		}
+		if(blocks[i].y <= 0 || blocks[i].y + blocks[i].h >=  600)
+		{
+			blocks[i].yS  = -1 * blocks[i].yS;
+			///blocks[i].yS *= -1;
+		}
+		if(pX >= blocks[i].x && 
+		pX <= blocks[i].x + blocks[i].w &&
+		pY >= blocks[i].y &&
+		pY <= blocks[i].y + blocks[i].h)
+		{
+			//a collision has happened
+			console.log("A collision has happened.");
+		}
 	}
-}
-
-function movement()
-{
-	blockX += blockXSpeed;
-	blockY += blockYSpeed;
+	
+	//draw pixel
+	ctx.fillStyle = "rgb(255,255,255)";
+	ctx.fillRect(pX, pY, 1, 1);
 }
 
 function collision()
 {
-//"rgb(0, 255, 0)"
-	if(blockX <= 0 || blockX + blockWidth >=  800)
+	if(pX <= 0 || pX + 1 >=  800)
 	{
-		blockXSpeed = -1 * blockXSpeed;
-		var r = Math.floor(Math.random() * 256);
-		var g = Math.floor(Math.random() * 256);
-		var b = Math.floor(Math.random() * 256);
-		color = "rgb(" + r + ", " + g + ", " + b + ")";
-		//blockXSpeed *= -1;
+		pXspeed *= -1;
 	}
-	if(blockY <= 0 || blockY + blockHeight >=  600)
+	if(pY <= 0 || pY + 1 >=  600)
 	{
-		blockYSpeed = -1 * blockYSpeed;
-		var r = Math.floor(Math.random() * 256);
-		var g = Math.floor(Math.random() * 256);
-		var b = Math.floor(Math.random() * 256);
-		color = "rgb(" + r + ", " + g + ", " + b + ")";
-		//blockYSpeed *= -1;
+		pYspeed *= -1;
 	}
 }
 
 function draw()
 {
 	ctx.clearRect(0,0,800,600);
+	ctx.fillStyle = "rgb(0,0,0)"
+	ctx.fillRect(0,0,800,600);
 	drawBlock();
-	movement();
 	collision();
 }
 
