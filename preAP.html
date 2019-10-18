@@ -20,6 +20,7 @@ var blockXSpeed = 2;
 var blockYSpeed = 2;
 var color = "rgb(0, 255, 0)";
 var blocks = [];
+var brokenBlocks = [];
 var numBlocks = 100;
 var pX = 400;
 var pY = 300;
@@ -39,6 +40,24 @@ function Block(x1, y1, w1, h1, xS1, yS1, r1, g1, b1, numHits1)
 	this.g = g1;
 	this.b = b1;
 	this.numHits = numHits1;
+}
+
+function BrokenBlock(xx1, yy1, xx2, yy2, xx3, yy3, xx4, yy4, w1, h1, r1, g1, b1)
+{
+	this.x1 = xx1;
+	this.y1 = yy1;
+	this.x2 = xx2;
+	this.y2 = yy2;
+	this.x3 = xx3;
+	this.y3 = yy3;
+	this.x4 = xx4;
+	this.y4 = yy4;
+	this.w = w1;
+	this.h = h1;
+	this.r = r1;
+	this.g = g1;
+	this.b = b1;
+	this.it = 0;
 }
 
 for(var i = 0; i < numBlocks; i++)
@@ -69,8 +88,11 @@ function drawBlock()
 	for(var i = 0; i < numBlocks; i++)
 	{
 		color = "rgb(" + blocks[i].r + ", " + blocks[i].g + ", " + blocks[i].b + ")";
+		if(blocks[i].numHits == 0)
+		{
 		ctx.fillStyle = color;
 		ctx.fillRect(blocks[i].x, blocks[i].y, blocks[i].w, blocks[i].h);
+		}
 		blocks[i].x += blocks[i].xS;
 		blocks[i].y += blocks[i].yS;
 		if(blocks[i].x <= 0 || blocks[i].x + blocks[i].w >=  800)
@@ -90,7 +112,36 @@ function drawBlock()
 		{
 			//a collision has happened
 			console.log("A collision has happened.");
+			blocks[i].numHits += 1;
+			//add broken block
+			var x1 = blocks[i].x;
+			var y1 = blocks[i].y;
+			var x2 = blocks[i].x + (blocks[i].w / 2);
+			var y2 = blocks[i].y;
+			var x3 = blocks[i].x;
+			var y3 = blocks[i].y + (blocks[i].h / 2);
+			var x4 = blocks[i].x + (blocks[i].w / 2);
+			var y4 = blocks[i].y + (blocks[i].h / 2);
+			var w = blocks[i].w / 2;
+			var h = blocks[i].h / 2;
+			var r = blocks[i].r;
+			var g = blocks[i].g;
+			var b = blocks[i].b;
+			brokenBlocks[brokenBlocks.length] = new BrokenBlock(x1,y1,x2,y2,x3,y3,x4,y4,w,h,r,g,b);
+			blocks.slice(i, 1);
+			i--;
 		}
+	}
+	
+	for(var i = 0; i < brokenBlocks.length; i++)
+	{
+	//draw block 1
+	
+	//draw block 2
+	
+	//draw block 3
+	
+	//draw block 4
 	}
 	
 	//draw pixel
@@ -110,6 +161,31 @@ function collision()
 	}
 }
 
+function drawBrokenBlocks()
+{
+	for(var a = 0; a < brokenBlocks.length; a++)
+	{
+		ctx.fillStyle = "rgb("+brokenBlocks[a].r+","+brokenBlocks[a].g+","+brokenBlocks[a].b + ")";
+		ctx.fillRect(brokenBlocks[a].x1, brokenBlocks[a].y1,brokenBlocks[a].w, brokenBlocks[a].h);
+		ctx.fillRect(brokenBlocks[a].x2, brokenBlocks[a].y2,brokenBlocks[a].w, brokenBlocks[a].h);
+		ctx.fillRect(brokenBlocks[a].x3, brokenBlocks[a].y3,brokenBlocks[a].w, brokenBlocks[a].h);
+		ctx.fillRect(brokenBlocks[a].x4, brokenBlocks[a].y4,brokenBlocks[a].w, brokenBlocks[a].h);
+		brokenBlocks[a].x1 -= 1;
+		brokenBlocks[a].x2 += 1;
+		brokenBlocks[a].x3 -= 1;
+		brokenBlocks[a].x4 += 1;
+		brokenBlocks[a].y1 -= 1;
+		brokenBlocks[a].y2 -= 1;
+		brokenBlocks[a].y3 += 1;
+		brokenBlocks[a].y4 += 1;
+		brokenBlocks[a].it += 1;
+		if(brokenBlocks[a].it > 15)
+		{
+		brokenBlocks.slice(a, 1);
+		}
+	}
+}
+
 function draw()
 {
 	ctx.clearRect(0,0,800,600);
@@ -117,6 +193,7 @@ function draw()
 	ctx.fillRect(0,0,800,600);
 	drawBlock();
 	collision();
+	drawBrokenBlocks();
 }
 
 setInterval(draw, 2);
