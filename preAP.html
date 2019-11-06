@@ -234,8 +234,9 @@ function drawBrokenBlocks()
 function drawScore()
 {	
 	ctx.fillStyle = "rgb(255,0,0)";
-	ctx.fillText("Score: " + score, 700, 50);
-	ctx.fillText("Time : " + playerTime, 700, 70);
+	ctx.font = "20px Arial";
+	ctx.fillText("Score: " + score, 600, 50);
+	ctx.fillText("Time : " + playerTime, 600, 70);
 }
 
 function replenishBlocks()
