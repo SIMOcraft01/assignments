@@ -1,0 +1,156 @@
+<html>
+<head>
+	<style>
+	*{padding: 0; margin:0;}
+	canvas{ background: #eee; display: block; margin: 0 auto;}
+	</style>
+</head>
+
+<body>
+<canvas id= "myCanvas" width="800" height="600"></canvas>
+<script type="text/javascript">
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+var map = [
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+];
+
+var pacmanLeft1 = new Image();
+pacmanLeft1.src = "tile048.png";
+var pacmanLeft2 = new Image();
+pacmanLeft2.src = "tile050.png";
+var pacmanRight1 = new Image();
+pacmanRight1.src = "tile052.png";
+var pacmanRight2 = new Image();
+pacmanRight2.src = "tile054.png";
+var pacmanUp1 = new Image();
+pacmanUp1.src = "tile049.png";
+var pacmanUp2 = new Image();
+pacmanUp2.src = "tile051.png";
+var pacmanDown1 = new Image();
+pacmanDown1.src = "tile053.png";
+var pacmanDown2 = new Image();
+pacmanDown2.src = "tile055.png";
+var pacmanClosed = new Image();
+pacmanClosed.src = "tile112.png";
+var timer = 0;
+var upPressed = false;
+var downPressed = false;
+var leftPressed = false;
+var rightPressed = false;
+var pX = 200;
+var pY = 200;
+
+function keyDownHandler(e){
+	if(e.keyCode == 38)
+	{
+		upPressed = true;
+	}
+	if(e.keyCode == 40)
+	{
+		downPressed = true;
+	}
+	if(e.keyCode == 37)
+	{
+		leftPressed = true;
+	}
+	if(e.keyCode == 39)
+	{
+		rightPressed = true;
+	}
+	}
+	
+function keyUpHandler(e){
+	if(e.keyCode == 38)
+	{
+		upPressed = false;
+	}
+	if(e.keyCode == 40)
+	{
+		downPressed = false;
+	}
+	if(e.keyCode == 37)
+	{
+		leftPressed = false;
+	}
+	if(e.keyCode == 39)
+	{
+		rightPressed = false;
+	}
+}
+
+function movement()
+{
+	if(leftPressed)
+	{
+		pX -= .5;
+	}
+	else if(rightPressed)
+	{
+		pX += .5;
+	}
+	else if(upPressed)
+	{
+		pY -= .5;
+	}
+	else if(downPressed)
+	{
+		pY += .5;
+	}
+}
+
+function drawPacman()
+{
+	timer++;
+	if(timer > 80)
+	{
+		timer = 0;
+	}
+	else if(timer > 60)
+	{
+		ctx.drawImage(pacmanClosed, pX, pY);
+	}
+	else if(timer > 40)
+	{
+		ctx.drawImage(pacmanLeft1, pX, pY);
+	}
+	else if(timer > 20)
+	{
+		ctx.drawImage(pacmanLeft2, pX, pY);
+	}
+	else
+	{
+		ctx.drawImage(pacmanLeft1, pX, pY);
+	}
+}
+
+function draw()
+{
+	ctx.clearRect(0,0,800,600);	
+	drawPacman();
+	movement();
+}
+
+setInterval(draw, 2);
+
+</script>
+</body>
+</html>

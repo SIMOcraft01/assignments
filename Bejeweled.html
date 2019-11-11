@@ -94,14 +94,11 @@ function drawGrid()
 		{
 			if(randNums[i][j].isSelected)
 			{
-				console.log("Changing color to white");
-				ctx.strokeStyle = "rgb(255,255,255)"
+				ctx.fillStyle = "rgb(255,255,255)";
+				ctx.fillRect((310 + (j*60)),(10 + (i*60)),60,60);
 			}
-			else
-			{
-				ctx.strokeStyle = "rgb(0,0,0)"
-			}
-			ctx.rect((310 + (j*60)),(10 + (i*60)),(60),(60));
+			ctx.strokeStyle = "rgb(0,0,0)"
+			ctx.rect((310 + (j*60)),(10 + (i*60)),60,60);
 			ctx.stroke();
 			//ctx.strokeStyle = "rgb(255,255,255)"
 		}
@@ -116,13 +113,11 @@ function collision()
 		{
 			///ctx.rect((310 + (j*60)),(10 + (i*60)),(60),(60));
 			if(pX > (310 + (j*60)) && pX < ((310 + (j*60))+60) &&
-			pY > (310 + (i*60)) && pY < ((10 + (i*60))+60))
+			pY > (10 + (i*60)) && pY < ((10 + (i*60))+60))
 			{
-				console.log("Something is hovered over");
 				if(mouseIsDown)
 				{
 					randNums[i][j].isSelected = true;
-					console.log("Something was selected");
 				}
 			}
 		}
@@ -267,7 +262,6 @@ function drawCircles()
 
 function draw()
 {
-		console.log("mouse X: " + pX + "   mouseY: " + pY);
 		timeX-=.05;
 		ctx.clearRect(0,0, 800, 600);
 		drawBoard();
