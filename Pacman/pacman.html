@@ -119,26 +119,106 @@ function movement()
 
 function drawPacman()
 {
-	timer++;
-	if(timer > 80)
+	
+	if(leftPressed)
 	{
-		timer = 0;
+		timer++;
+		if(timer > 80)
+		{
+			timer = 0;
+		}
+		else if(timer > 60)
+		{
+			ctx.drawImage(pacmanClosed, pX, pY);
+		}
+		else if(timer > 40)
+		{
+			ctx.drawImage(pacmanLeft1, pX, pY);
+		}
+		else if(timer > 20)
+		{
+			ctx.drawImage(pacmanLeft2, pX, pY);
+		}
+		else
+		{
+			ctx.drawImage(pacmanLeft1, pX, pY);
+		}
 	}
-	else if(timer > 60)
+	else if(rightPressed)
 	{
-		ctx.drawImage(pacmanClosed, pX, pY);
+		timer++;
+		if(timer > 80)
+		{
+			timer = 0;
+		}
+		else if(timer > 60)
+		{
+			ctx.drawImage(pacmanClosed, pX, pY);
+		}
+		else if(timer > 40)
+		{
+			ctx.drawImage(pacmanRight1, pX, pY);
+		}
+		else if(timer > 20)
+		{
+			ctx.drawImage(pacmanRight2, pX, pY);
+		}
+		else
+		{
+			ctx.drawImage(pacmanRight1, pX, pY);
+		}
 	}
-	else if(timer > 40)
+	else if(upPressed)
 	{
-		ctx.drawImage(pacmanLeft1, pX, pY);
+		timer++;
+		if(timer > 80)
+		{
+			timer = 0;
+		}
+		else if(timer > 60)
+		{
+			ctx.drawImage(pacmanClosed, pX, pY);
+		}
+		else if(timer > 40)
+		{
+			ctx.drawImage(pacmanUp1, pX, pY);
+		}
+		else if(timer > 20)
+		{
+			ctx.drawImage(pacmanUp2, pX, pY);
+		}
+		else
+		{
+			ctx.drawImage(pacmanUp1, pX, pY);
+		}
 	}
-	else if(timer > 20)
+	else if(downPressed)
 	{
-		ctx.drawImage(pacmanLeft2, pX, pY);
+		timer++;
+		if(timer > 80)
+		{
+			timer = 0;
+		}
+		else if(timer > 60)
+		{
+			ctx.drawImage(pacmanClosed, pX, pY);
+		}
+		else if(timer > 40)
+		{
+			ctx.drawImage(pacmanDown1, pX, pY);
+		}
+		else if(timer > 20)
+		{
+			ctx.drawImage(pacmanDown2, pX, pY);
+		}
+		else
+		{
+			ctx.drawImage(pacmanDown1, pX, pY);
+		}
 	}
 	else
 	{
-		ctx.drawImage(pacmanLeft1, pX, pY);
+		ctx.drawImage(pacmanClosed, pX, pY);
 	}
 }
 
