@@ -26,6 +26,10 @@ var mouseIsDown = false;
 var score = 0;
 var checkForZeroes = false;
 var fallingCols = [];
+var selected1Row = -1;
+var selected2Row = -1;
+var selected1Col = -1;
+var selected2Col = -1;
 
 function mouseMoveHandler(e) {
     pX = e.clientX - canvas.offsetLeft;
@@ -61,7 +65,7 @@ function fallingCol(startX, startY, data)
 	this.x = startX;
 	this.y = startY;
 	this.nums = data;
-	this.stopIt = (60 * data.length) / 5;
+	this.stopIt = (60 * data.length);
 	this.startIt = 0;
 }
 
@@ -74,8 +78,8 @@ for(var i = 0;i< 8; i++)
 	for(var j = 0;j< 8; j++)
 	{
 		var v = getRandomInt(1, 3);
-		var x = (345+ (j*60));
-		var y = (40 + (i*60));
+		var x = (345+ (i*60));
+		var y = (40 + (j*60));
 		randNums[i][j] = new gridObject(x, y, false, v, false);
 	}
 }
@@ -130,7 +134,53 @@ function collision()
 				{
 					randNums[i][j].isSelected = true;
 					console.log("The value at " + i + " and  " + j + " is equal to: " +
-						randNums[i][j].value);				
+						randNums[i][j].value);
+					if(selected1Col == -1)
+					{
+						selected1Row = i;
+						selected1Col = j;
+					}
+					else if(selected1Row == i && selected1Col == j)
+					{
+					}
+					else
+					{
+						selected2Row = i;
+						selected2Col = j;
+					}
+					
+					
+					if(selected1Col > -1 && selected2Col > -1)
+					{
+						if(selected1Col == selected2Col)
+						{
+							if((selected1Row == selected2Row + 1) ||
+							(selected1Row == selected2Row - 1))
+							{
+								var tempVal = randNums[selected1Row][selected1Col].value;
+								randNums[selected1Row][selected1Col].value = 
+									randNums[selected2Row][selected2Col].value;
+								randNums[selected2Row][selected2Col].value = tempVal;	
+							}
+						}
+						else if(selected1Row == selected2Row)
+						{
+							if((selected1Col == selected2Col + 1) ||
+							(selected1Col == selected2Col - 1))
+							{
+								var tempVal = randNums[selected1Row][selected1Col].value;
+								randNums[selected1Row][selected1Col].value = 
+									randNums[selected2Row][selected2Col].value;
+								randNums[selected2Row][selected2Col].value = tempVal;	
+							}
+						}
+						randNums[selected1Row][selected1Col].isSelected = false;
+						randNums[selected2Row][selected2Col].isSelected = false;
+						selected1Row = -1;
+						selected1Col = -1;
+						selected2Row = -1;
+						selected2Col = -1; 
+					}
 				}
 			}
 		}
@@ -140,14 +190,14 @@ function collision()
 function checkForMatches()
 {
 	
-	for(var i =0; i < 3; i++)
+	for(var i =0; i < 4; i++)
 	{
-		for(var j = 0; j < 3; j++)
+		for(var j = 0; j < 4; j++)
 		{
-			if(randNums[i][j].value == randNums[i+1][j].value &&
-			randNums[i][j].value == randNums[i+2][j].value &&
-			randNums[i][j].value == randNums[i+3][j].value &&
-			randNums[i][j].value == randNums[i+4][j].value&&
+			if(randNums[i][j].value === randNums[i+1][j].value &&
+			randNums[i][j].value === randNums[i+2][j].value &&
+			randNums[i][j].value === randNums[i+3][j].value &&
+			randNums[i][j].value === randNums[i+4][j].value&&
 			randNums[i][j].value > 0)
 			{
 				//we have a match of 5 across
@@ -163,10 +213,10 @@ function checkForMatches()
 				j = 4;
 			}
 			
-			else if(randNums[i][j].value == randNums[i][j+1].value &&
-			randNums[i][j].value == randNums[i][j+2].value &&
-			randNums[i][j].value == randNums[i][j+3].value &&
-			randNums[i][j].value == randNums[i][j+4].value &&
+			else if(randNums[i][j].value === randNums[i][j+1].value &&
+			randNums[i][j].value === randNums[i][j+2].value &&
+			randNums[i][j].value === randNums[i][j+3].value &&
+			randNums[i][j].value === randNums[i][j+4].value &&
 			randNums[i][j].value > 0)
 			{
 				//we have a match of 5 across
@@ -218,11 +268,8 @@ function checkingForZeroes()
 				while(counter < count)
 				{
 					tempNums[counter] = getRandomInt(1, 3);
-					console.log("The value of tempNums[tempNums.length], where length = : " +tempNums.length+
-					" is equal to: " + tempNums[counter]);
 					counter++;
 				}
-				console.log("Should be adding a fallingCols.");
 				fallingCols[fallingCols.length] = new fallingCol(i, j, tempNums);
 				randNums[i][j].value = -1;
 			}	
@@ -237,23 +284,29 @@ function drawFallingCols()
 		for(var j = 0; j < fallingCols[i].nums.length; j++)
 		{
 			var x = (345 + (fallingCols[i].x * 60));
-			var y = (40 + ((fallingCols[i].y - fallingCols[i].nums.length) *60) - (j * 60) + (fallingCols[i].startIt * 1));
+			var y = (40 + (fallingCols[i].y *60)  + (fallingCols[i].startIt * .5));
 			ctx.fillStyle = "#000000";
 			ctx.font = "30px Times New Roman";
-			ctx.fillText(randNums[i][j].value, x, y);
+			ctx.fillText(fallingCols[i].nums[j], x, y);
 		}
 		fallingCols[i].startIt+=1;
 		if(fallingCols[i].startIt == fallingCols[i].stopIt)
 		{
 			for(var j = 0; j < fallingCols[i].nums.length; j++)
 			{
-				console.log("The value fo fallingCols at j : " + fallingCols[i].nums[j]);
+				//console.log("The value fo fallingCols at j : " + fallingCols[i].nums[j]);
 				randNums[fallingCols[i].x][fallingCols[i].y - j].value = fallingCols[i].nums[j];
-				console.log("Index " + fallingCols[i].x + " and " + fallingCols[i].y - j + 
-				" is given a value of: " + fallingCols[i].nums[j]);
+				fallingCols.splice(i, 1);
+				//console.log("Index " + fallingCols[i].x + " and " + fallingCols[i].y - j + 
+				//" is given a value of: " + fallingCols[i].nums[j]);
 			}
 		}
 	}
+}
+
+function switchSpots()
+{
+
 }
 
 function drawBoard()
@@ -410,7 +463,7 @@ if(fallingCols.length > 0)
 	
 }
 
-setInterval(draw, 0);
+setInterval(draw, 10);
 
 </script>
 </body>
