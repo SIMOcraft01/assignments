@@ -192,7 +192,7 @@ function checkForMatches()
 	
 	for(var i =0; i < 4; i++)
 	{
-		for(var j = 0; j < 4; j++)
+		for(var j = 0; j < 8; j++)
 		{
 			if(randNums[i][j].value === randNums[i+1][j].value &&
 			randNums[i][j].value === randNums[i+2][j].value &&
@@ -200,7 +200,7 @@ function checkForMatches()
 			randNums[i][j].value === randNums[i+4][j].value&&
 			randNums[i][j].value > 0)
 			{
-				//we have a match of 5 across
+				//we have a match of 5 down
 				console.log("We have a 5 match down");
 				console.log("Starting at i  j: " + i + "   " + j);
 				score += 30;
@@ -213,7 +213,14 @@ function checkForMatches()
 				j = 4;
 			}
 			
-			else if(randNums[i][j].value === randNums[i][j+1].value &&
+		}
+	}
+	
+	for(var i =0; i < 8; i++)
+	{
+		for(var j = 0; j < 4; j++)
+		{
+			if(randNums[i][j].value === randNums[i][j+1].value &&
 			randNums[i][j].value === randNums[i][j+2].value &&
 			randNums[i][j].value === randNums[i][j+3].value &&
 			randNums[i][j].value === randNums[i][j+4].value &&
@@ -245,10 +252,8 @@ function checkingForZeroes()
 		{
 			if(randNums[i][j].value == 0)
 			{
-				console.log("randnums[i][j] == 0");
 				var count = 0;
 				var tempI = i;
-				console.log("Temp i is: " + tempI);
 				while(tempI >= 0 && randNums[tempI][j].value == 0)
 				{
 						console.log("Temp i is: " + tempI);
@@ -259,19 +264,35 @@ function checkingForZeroes()
 				var tempNums = [];
 				var indexToStartAdding = i - count;
 				var counter = 0;
-				while(counter < indexToStartAdding)
+				while(counter <= indexToStartAdding)
 				{
-					tempNums[counter] = randNums[indexToStartAdding][j];
+					tempNums.push(randNums[indexToStartAdding - counter][j].value);
 					counter++;
 				}
 				counter = 0;
 				while(counter < count)
 				{
-					tempNums[counter] = getRandomInt(1, 3);
+					tempNums.push(getRandomInt(1, 3));
 					counter++;
 				}
-				fallingCols[fallingCols.length] = new fallingCol(i, j, tempNums);
-				randNums[i][j].value = -1;
+				fallingCols.push(new fallingCol(i, j, tempNums));
+				count = 0;
+				tempI = i;
+				while(tempI >= 0 && randNums[tempI][j].value == 0)
+				{
+						randNums[tempI][j].value = -1;
+						count++;
+						tempI--;
+				}
+				console.log("The count is: " + count);
+				console.log("The size of tampNums is: " + tempNums.length);
+				console.log("The values of tempNums is: " );
+				for(var a = 0; a < tempNums.length;a++)
+				{
+					console.log("Value at: " + a + "  is:  " + tempNums[a]);
+				}
+				i = 8;
+				j = 8;
 			}	
 		}
 	}
@@ -292,14 +313,16 @@ function drawFallingCols()
 		fallingCols[i].startIt+=1;
 		if(fallingCols[i].startIt == fallingCols[i].stopIt)
 		{
+			console.log("The length of fallingCols[i].nums.length: " + fallingCols[i].nums.length);
 			for(var j = 0; j < fallingCols[i].nums.length; j++)
 			{
 				//console.log("The value fo fallingCols at j : " + fallingCols[i].nums[j]);
-				randNums[fallingCols[i].x][fallingCols[i].y - j].value = fallingCols[i].nums[j];
-				fallingCols.splice(i, 1);
+				randNums[fallingCols[i].x - j][fallingCols[i].y].value = fallingCols[i].nums[j];
+				fallingCols[j].nums.pop();
 				//console.log("Index " + fallingCols[i].x + " and " + fallingCols[i].y - j + 
 				//" is given a value of: " + fallingCols[i].nums[j]);
 			}
+			fallingCols[j].nums.splice(i, 1);
 		}
 	}
 }
