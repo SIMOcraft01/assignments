@@ -30,6 +30,12 @@ var selected1Row = -1;
 var selected2Row = -1;
 var selected1Col = -1;
 var selected2Col = -1;
+var loading = true;
+var loadTimer = 0;
+var isFalling = false;
+var wasAMatch = false;
+var anErrorOccurred = false;
+var noMatchFound = true;
 
 function mouseMoveHandler(e) {
     pX = e.clientX - canvas.offsetLeft;
@@ -65,15 +71,14 @@ function fallingCol(startX, startY, data)
 	this.x = startX;
 	this.y = startY;
 	this.nums = data;
-	this.stopIt = (60 * data.length);
+	this.stopIt = 29;
 	this.startIt = 0;
 }
 
-
-
 var randNums = [];
-for(var i = 0;i< 8; i++)
-{
+
+	for(var i = 0;i< 8; i++)
+	{	
 	randNums[i] = [];
 	for(var j = 0;j< 8; j++)
 	{
@@ -82,7 +87,10 @@ for(var i = 0;i< 8; i++)
 		var y = (40 + (j*60));
 		randNums[i][j] = new gridObject(x, y, false, v, false);
 	}
-}
+	}
+
+
+console.log("The value of randNums[7][7] is: " + randNums[7][7].value);
 
 function randArray()
 {
@@ -190,6 +198,8 @@ function collision()
 function checkForMatches()
 {
 	
+	if(noMatchFound)
+	{
 	for(var i =0; i < 4; i++)
 	{
 		for(var j = 0; j < 8; j++)
@@ -209,13 +219,70 @@ function checkForMatches()
 				randNums[i+2][j].value = 0;
 				randNums[i+3][j].value = 0;
 				randNums[i+4][j].value = 0;
-				i = 4;
-				j = 4;
+				i = 8;
+				j = 8;
+				noMatchFound = false;
 			}
 			
 		}
 	}
+	}
+	if(noMatchFound)
+	{
+	for(var i =0; i < 5; i++)
+	{
+		for(var j = 0; j < 8; j++)
+		{
+			if(randNums[i][j].value === randNums[i+1][j].value &&
+			randNums[i][j].value === randNums[i+2][j].value &&
+			randNums[i][j].value === randNums[i+3][j].value &&
+			randNums[i][j].value > 0)
+			{
+				//we have a match of 5 down
+				console.log("We have a 4 match down");
+				console.log("Starting at i  j: " + i + "   " + j);
+				score += 20;
+				randNums[i][j].value = 0;
+				randNums[i+1][j].value = 0;
+				randNums[i+2][j].value = 0;
+				randNums[i+3][j].value = 0;
+				i = 8;
+				j = 8;
+				noMatchFound = false;
+			}
+			
+		}
+	}
+	}
 	
+	if(noMatchFound)
+	{
+	for(var i =0; i < 6; i++)
+	{
+		for(var j = 0; j < 8; j++)
+		{
+			if(randNums[i][j].value === randNums[i+1][j].value &&
+			randNums[i][j].value === randNums[i+2][j].value &&
+			randNums[i][j].value > 0)
+			{
+				//we have a match of 5 down
+				console.log("We have a 3 match down");
+				console.log("Starting at i  j: " + i + "   " + j);
+				score += 10;
+				randNums[i][j].value = 0;
+				randNums[i+1][j].value = 0;
+				randNums[i+2][j].value = 0;
+				i = 8;
+				j = 8;
+				noMatchFound = false;
+			}
+			
+		}
+	}
+	}
+	
+	if(noMatchFound)
+	{
 	for(var i =0; i < 8; i++)
 	{
 		for(var j = 0; j < 4; j++)
@@ -236,12 +303,84 @@ function checkForMatches()
 				randNums[i][j+3].value = 0;
 				randNums[i][j+4].value = 0;
 				checkForZeroes = true;
-				i = 4;
-				j = 4;
+				i = 8;
+				j = 8;
+				noMatchFound = false;
 			}
 		}
 	}
+	}
 	
+	if(noMatchFound)
+	{
+	for(var i =0; i < 8; i++)
+	{
+		for(var j = 0; j < 5; j++)
+		{
+			if(randNums[i][j].value === randNums[i][j+1].value &&
+			randNums[i][j].value === randNums[i][j+2].value &&
+			randNums[i][j].value === randNums[i][j+3].value &&
+			randNums[i][j].value > 0)
+			{
+				//we have a match of 5 across
+				console.log("We have a 4 match across");
+				console.log("Starting at i  j: " + i + "   " + j);
+				score += 20;
+				randNums[i][j].value = 0;
+				randNums[i][j+1].value = 0;
+				randNums[i][j+2].value = 0;
+				randNums[i][j+3].value = 0;
+				checkForZeroes = true;
+				i = 4;
+				j = 4;
+				noMatchFound = false;
+			}
+		}
+	}
+	}
+	
+	if(noMatchFound)
+	{
+	for(var i =0; i < 8; i++)
+	{
+		for(var j = 0; j < 6; j++)
+		{
+			if(randNums[i][j].value === randNums[i][j+1].value &&
+			randNums[i][j].value === randNums[i][j+2].value &&
+			randNums[i][j].value > 0)
+			{
+				//we have a match of 5 across
+				console.log("We have a 3 match across");
+				console.log("Starting at i  j: " + i + "   " + j);
+				score += 10;
+				randNums[i][j].value = 0;
+				randNums[i][j+1].value = 0;
+				randNums[i][j+2].value = 0;
+				checkForZeroes = true;
+				i = 8;
+				j = 8;
+				noMatchFound = false;
+			}
+		}
+	}
+	}
+	
+}
+
+function checkingForNegs()
+{
+	for(var i =7; i >= 0; i--)
+	{
+		for(var j = 7; j >= 0; j--)
+		{
+			if(randNums[i][j].value == -1)
+			{
+				console.log("A negative was left behind after setting values....");
+				console.log("This value was at " + i + "  and " + j);
+				anErrorOccurred = true;
+			}
+		}
+	}
 }
 
 function checkingForZeroes()
@@ -284,15 +423,16 @@ function checkingForZeroes()
 						count++;
 						tempI--;
 				}
-				console.log("The count is: " + count);
-				console.log("The size of tampNums is: " + tempNums.length);
-				console.log("The values of tempNums is: " );
+				//console.log("The count is: " + count);
+				//console.log("The size of tempNums is: " + tempNums.length);
+				//console.log("The values of tempNums is: " );
 				for(var a = 0; a < tempNums.length;a++)
 				{
-					console.log("Value at: " + a + "  is:  " + tempNums[a]);
+					//console.log("Value at: " + a + "  is:  " + tempNums[a]);
 				}
-				i = 8;
-				j = 8;
+				//i = -1;
+				//j = -1;
+				wasAMatch = true;
 			}	
 		}
 	}
@@ -304,13 +444,13 @@ function drawFallingCols()
 	{
 		for(var j = 0; j < fallingCols[i].nums.length; j++)
 		{
-			var x = (345 + (fallingCols[i].x * 60));
-			var y = (40 + (fallingCols[i].y *60)  + (fallingCols[i].startIt * .5));
+			var x = (340+(fallingCols[i].y * 60));
+			var y = (-20+(fallingCols[i].x *60 - (j * 60))  + (fallingCols[i].startIt * .2));///real value is 2
 			ctx.fillStyle = "#000000";
 			ctx.font = "30px Times New Roman";
 			ctx.fillText(fallingCols[i].nums[j], x, y);
 		}
-		fallingCols[i].startIt+=1;
+		fallingCols[i].startIt+=.5;
 		if(fallingCols[i].startIt == fallingCols[i].stopIt)
 		{
 			console.log("The length of fallingCols[i].nums.length: " + fallingCols[i].nums.length);
@@ -318,11 +458,14 @@ function drawFallingCols()
 			{
 				//console.log("The value fo fallingCols at j : " + fallingCols[i].nums[j]);
 				randNums[fallingCols[i].x - j][fallingCols[i].y].value = fallingCols[i].nums[j];
-				fallingCols[j].nums.pop();
-				//console.log("Index " + fallingCols[i].x + " and " + fallingCols[i].y - j + 
-				//" is given a value of: " + fallingCols[i].nums[j]);
+				//fallingCols[j].nums.pop();
+				console.log("Index " + (fallingCols[i].x - j) + " and " + fallingCols[i].y + 
+				" is given a value of: " + fallingCols[i].nums[j]);
 			}
-			fallingCols[j].nums.splice(i, 1);
+			fallingCols.splice(i,1);
+			checkingForNegs();
+			wasAMatch = false;
+			noMatchFound = true;
 		}
 	}
 }
@@ -469,9 +612,21 @@ function drawCircles()
 
 function draw()
 {
+
 if(fallingCols.length > 0)
 {
 	console.log("FallingCols size is: " + fallingCols.length);
+}
+
+while(loading)
+{
+		console.log("Loading....");
+		loadTimer++;
+		if(loadTimer > 1000)
+		{
+			loading = false;
+
+		}
 }
 		timeX-=.05;
 		ctx.clearRect(0,0, 800, 600);
@@ -480,9 +635,15 @@ if(fallingCols.length > 0)
 		time();
 		collision();
 		randArray();
+		if(!anErrorOccurred)
+		{
+		if(!wasAMatch)
+		{
 		checkForMatches();
+		}
 		checkingForZeroes();
 		drawFallingCols();
+		}
 	
 }
 
