@@ -36,6 +36,8 @@ var isFalling = false;
 var wasAMatch = false;
 var anErrorOccurred = false;
 var noMatchFound = true;
+var matchAcross = false;
+var matchDown = false;
 
 function mouseMoveHandler(e) {
     pX = e.clientX - canvas.offsetLeft;
@@ -222,6 +224,7 @@ function checkForMatches()
 				i = 8;
 				j = 8;
 				noMatchFound = false;
+				matchDown = true;
 			}
 			
 		}
@@ -249,6 +252,7 @@ function checkForMatches()
 				i = 8;
 				j = 8;
 				noMatchFound = false;
+				matchDown = true;
 			}
 			
 		}
@@ -275,6 +279,7 @@ function checkForMatches()
 				i = 8;
 				j = 8;
 				noMatchFound = false;
+				matchDown = true;
 			}
 			
 		}
@@ -306,6 +311,7 @@ function checkForMatches()
 				i = 8;
 				j = 8;
 				noMatchFound = false;
+				matchAcross = true;
 			}
 		}
 	}
@@ -331,9 +337,10 @@ function checkForMatches()
 				randNums[i][j+2].value = 0;
 				randNums[i][j+3].value = 0;
 				checkForZeroes = true;
-				i = 4;
-				j = 4;
+				i = 8;
+				j = 8;
 				noMatchFound = false;
+				matchAcross = true;
 			}
 		}
 	}
@@ -360,6 +367,7 @@ function checkForMatches()
 				i = 8;
 				j = 8;
 				noMatchFound = false;
+				matchAcross = true;
 			}
 		}
 	}
@@ -377,7 +385,7 @@ function checkingForNegs()
 			{
 				console.log("A negative was left behind after setting values....");
 				console.log("This value was at " + i + "  and " + j);
-				anErrorOccurred = true;
+				//anErrorOccurred = true;
 			}
 		}
 	}
@@ -417,11 +425,21 @@ function checkingForZeroes()
 				fallingCols.push(new fallingCol(i, j, tempNums));
 				count = 0;
 				tempI = i;
+				if(matchDown)
+				{
+				console.log("was a match down");
 				while(tempI >= 0 && randNums[tempI][j].value == 0)
 				{
+				
 						randNums[tempI][j].value = -1;
 						count++;
 						tempI--;
+				}
+				}
+				if(matchAcross)
+				{
+					console.log("was a match across");
+					randNums[tempI][j].value = -1;
 				}
 				//console.log("The count is: " + count);
 				//console.log("The size of tempNums is: " + tempNums.length);
@@ -444,16 +462,19 @@ function drawFallingCols()
 	{
 		for(var j = 0; j < fallingCols[i].nums.length; j++)
 		{
+			if(fallingCols[i].startIt < 60)
+			{
 			var x = (340+(fallingCols[i].y * 60));
-			var y = (-20+(fallingCols[i].x *60 - (j * 60))  + (fallingCols[i].startIt * .2));///real value is 2
+			var y = (-20+(fallingCols[i].x *60 - (j * 60))  + (fallingCols[i].startIt * 1));///real value is 2
 			ctx.fillStyle = "#000000";
 			ctx.font = "30px Times New Roman";
 			ctx.fillText(fallingCols[i].nums[j], x, y);
+			}
 		}
-		fallingCols[i].startIt+=.5;
+		fallingCols[i].startIt+=1;
 		if(fallingCols[i].startIt == fallingCols[i].stopIt)
 		{
-			console.log("The length of fallingCols[i].nums.length: " + fallingCols[i].nums.length);
+			console.log("The length of fallingCols[" + i + "].nums.length: " + fallingCols[i].nums.length);
 			for(var j = 0; j < fallingCols[i].nums.length; j++)
 			{
 				//console.log("The value fo fallingCols at j : " + fallingCols[i].nums[j]);
@@ -462,10 +483,16 @@ function drawFallingCols()
 				console.log("Index " + (fallingCols[i].x - j) + " and " + fallingCols[i].y + 
 				" is given a value of: " + fallingCols[i].nums[j]);
 			}
-			fallingCols.splice(i,1);
+			//fallingCols.splice(i,1);
 			checkingForNegs();
 			wasAMatch = false;
 			noMatchFound = true;
+			matchAcross = false;
+			matchDown = false;
+		}
+		if(fallingCols[i].startIt > 500)
+		{
+			fallingCols.splice(i,1);
 		}
 	}
 }
