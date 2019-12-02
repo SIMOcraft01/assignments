@@ -30,6 +30,10 @@ var selected1Row = -1;
 var selected2Row = -1;
 var selected1Col = -1;
 var selected2Col = -1;
+var selected1RowTemp = -1;
+var selected2RowTemp = -1;
+var selected1ColTemp = -1;
+var selected2ColTemp = -1;
 var loading = true;
 var loadTimer = 0;
 var isFalling = false;
@@ -38,6 +42,19 @@ var anErrorOccurred = false;
 var noMatchFound = true;
 var matchAcross = false;
 var matchDown = false;
+var s1 = new Image();
+s1.src = "s1.png";
+var s2 = new Image();
+s2.src = "s2.png";
+var s3 = new Image();
+s3.src = "s3.png";
+var s4 = new Image();
+s4.src = "s4.png";
+var s5 = new Image();
+s5.src = "s5.png";
+var oldScore = 0;
+var checkForMatchSuccess = false;
+var thereWasAMatch = false;
 
 function mouseMoveHandler(e) {
     pX = e.clientX - canvas.offsetLeft;
@@ -73,7 +90,7 @@ function fallingCol(startX, startY, data)
 	this.x = startX;
 	this.y = startY;
 	this.nums = data;
-	this.stopIt = 29;
+	this.stopIt = 31;
 	this.startIt = 0;
 }
 
@@ -84,7 +101,7 @@ var randNums = [];
 	randNums[i] = [];
 	for(var j = 0;j< 8; j++)
 	{
-		var v = getRandomInt(1, 3);
+		var v = getRandomInt(1, 5);
 		var x = (345+ (i*60));
 		var y = (40 + (j*60));
 		randNums[i][j] = new gridObject(x, y, false, v, false);
@@ -100,11 +117,31 @@ function randArray()
 	{
 		for(var j = 0;j<8;j++)
 		{
-			var x = (345+ (j*60));
-			var y = (40 + (i*60));
+			var x = (315+ (j*60));
+			var y = (15 + (i*60));
 			ctx.fillStyle = "#000000";
 			ctx.font = "30px Times New Roman";
-			ctx.fillText(randNums[i][j].value, x, y);
+			//ctx.fillText(randNums[i][j].value, x, y);
+			if(randNums[i][j].value == 1)
+			{
+				ctx.drawImage(s1, x, y);
+			}
+			if(randNums[i][j].value == 2)
+			{
+				ctx.drawImage(s2, x, y);
+			}
+			if(randNums[i][j].value == 3)
+			{
+				ctx.drawImage(s3, x, y);
+			}
+			if(randNums[i][j].value == 4)
+			{
+				ctx.drawImage(s4, x, y);
+			}
+			if(randNums[i][j].value == 5)
+			{
+				ctx.drawImage(s5, x, y);
+			}
 		}
 	}
 }
@@ -157,6 +194,7 @@ function collision()
 					{
 						selected2Row = i;
 						selected2Col = j;
+						checkForMatchSuccess = true;
 					}
 					
 					
@@ -225,6 +263,7 @@ function checkForMatches()
 				j = 8;
 				noMatchFound = false;
 				matchDown = true;
+				thereWasAMatch = true;
 			}
 			
 		}
@@ -253,6 +292,7 @@ function checkForMatches()
 				j = 8;
 				noMatchFound = false;
 				matchDown = true;
+				thereWasAMatch = true;
 			}
 			
 		}
@@ -280,6 +320,7 @@ function checkForMatches()
 				j = 8;
 				noMatchFound = false;
 				matchDown = true;
+				thereWasAMatch = true;
 			}
 			
 		}
@@ -312,6 +353,7 @@ function checkForMatches()
 				j = 8;
 				noMatchFound = false;
 				matchAcross = true;
+				thereWasAMatch = true;
 			}
 		}
 	}
@@ -341,6 +383,7 @@ function checkForMatches()
 				j = 8;
 				noMatchFound = false;
 				matchAcross = true;
+				thereWasAMatch = true;
 			}
 		}
 	}
@@ -368,6 +411,7 @@ function checkForMatches()
 				j = 8;
 				noMatchFound = false;
 				matchAcross = true;
+				thereWasAMatch = true;
 			}
 		}
 	}
@@ -419,7 +463,7 @@ function checkingForZeroes()
 				counter = 0;
 				while(counter < count)
 				{
-					tempNums.push(getRandomInt(1, 3));
+					tempNums.push(getRandomInt(1, 5));
 					counter++;
 				}
 				fallingCols.push(new fallingCol(i, j, tempNums));
@@ -462,13 +506,35 @@ function drawFallingCols()
 	{
 		for(var j = 0; j < fallingCols[i].nums.length; j++)
 		{
-			if(fallingCols[i].startIt < 60)
+			if(fallingCols[i].startIt < 30)
 			{
-			var x = (340+(fallingCols[i].y * 60));
-			var y = (-20+(fallingCols[i].x *60 - (j * 60))  + (fallingCols[i].startIt * 1));///real value is 2
+			//var x = (340+(fallingCols[i].y * 60));
+			//var y = (-20+(fallingCols[i].x *60 - (j * 60))  + (fallingCols[i].startIt * 1));///real value is 2
+			var x = (315+ (fallingCols[i].y*60));
+			var y = (-55 + (fallingCols[i].x*60 - (j*60)) + (fallingCols[i].startIt * 2) );
 			ctx.fillStyle = "#000000";
 			ctx.font = "30px Times New Roman";
-			ctx.fillText(fallingCols[i].nums[j], x, y);
+			//ctx.fillText(fallingCols[i].nums[j], x, y);
+			if(fallingCols[i].nums[j] == 1)
+			{
+				ctx.drawImage(s1, x, y);
+			}
+			if(fallingCols[i].nums[j] == 2)
+			{
+				ctx.drawImage(s2, x, y);
+			}
+			if(fallingCols[i].nums[j] == 3)
+			{
+				ctx.drawImage(s3, x, y);
+			}
+			if(fallingCols[i].nums[j] == 4)
+			{
+				ctx.drawImage(s4, x, y);
+			}
+			if(fallingCols[i].nums[j] == 5)
+			{
+				ctx.drawImage(s5, x, y);
+			}
 			}
 		}
 		fallingCols[i].startIt+=1;
@@ -497,10 +563,6 @@ function drawFallingCols()
 	}
 }
 
-function switchSpots()
-{
-
-}
 
 function drawBoard()
 {
@@ -647,6 +709,7 @@ if(fallingCols.length > 0)
 
 while(loading)
 {
+		oldScore = score;
 		console.log("Loading....");
 		loadTimer++;
 		if(loadTimer > 1000)
@@ -656,6 +719,10 @@ while(loading)
 		}
 }
 		timeX-=.05;
+		if(timeX < 0)
+		{
+			timeX = 0;
+		}
 		ctx.clearRect(0,0, 800, 600);
 		drawBoard();
 		drawGrid();
@@ -671,7 +738,7 @@ while(loading)
 		checkingForZeroes();
 		drawFallingCols();
 		}
-	
+
 }
 
 setInterval(draw, 10);
