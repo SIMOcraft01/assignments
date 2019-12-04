@@ -286,84 +286,77 @@ function drawGhosts()
 				//ctx.drawImage(pacmanLeft1, pX, pY);
 			}
 	}
-	else if(rightPressed)
+	else if(ghosts[i].dir == 1)
 	{
 		if(moveTimer > 36)
 		{
-			currentImage =pacmanClosed;
+			ghost1Image = pinkyRight1;
 			//ctx.drawImage(pacmanClosed, pX, pY);
 		}
 		else if(moveTimer > 24)
 		{
-			currentImage =pacmanRight1;
+			ghost1Image = pinkyRight2;
 			//ctx.drawImage(pacmanRight1, pX, pY);
 		}
 		else if(moveTimer > 12)
 		{
-			currentImage =pacmanRight2;
+			ghost1Image = pinkyRight1;
 			//ctx.drawImage(pacmanRight2, pX, pY);
 		}
 		else
 		{
-			currentImage =pacmanRight1;
+			ghost1Image = pinkyRight1;
 			//ctx.drawImage(pacmanRight1, pX, pY);
 		}
 	}
-	else if(upPressed)
+	else if(ghosts[i].dir == 3)
 	{
 		if(moveTimer > 36)
 		{
-			currentImage =pacmanClosed;
+			ghost1Image = pinkyUp1;
 			//ctx.drawImage(pacmanClosed, pX, pY);
 		}
 		else if(moveTimer > 24)
 		{
-			currentImage =pacmanUp1;
+			ghost1Image = pinkyUp2;
 			//ctx.drawImage(pacmanUp1, pX, pY);
 		}
 		else if(moveTimer > 12)
 		{
-			currentImage =pacmanUp2;
+			ghost1Image = pinkyUp1;
 			//ctx.drawImage(pacmanUp2, pX, pY);
 		}
 		else
 		{
-			currentImage =pacmanUp1;
+			ghost1Image = pinkyUp2;
 			//ctx.drawImage(pacmanUp1, pX, pY);
 		}
 	}
-	else if(downPressed)
+	else if(ghosts[i].dir == 3)
 	{
 		if(moveTimer > 36)
 		{
-			currentImage =pacmanClosed;
+			ghost1Image = pinkydown1;
 			///ctx.drawImage(pacmanClosed, pX, pY);
 		}
 		else if(moveTimer > 24)
 		{
-			currentImage =pacmanDown1;
+			ghost1Image = pinkyDown2;
 			//ctx.drawImage(pacmanDown1, pX, pY);
 		}
 		else if(moveTimer > 12)
 		{
-			currentImage =pacmanDown2;
+			ghost1Image = pinkyDown1;
 			//ctx.drawImage(pacmanDown2, pX, pY);
 		}
 		else
 		{
-			currentImage =pacmanDown1;
+			ghost1Image = pinkyDown2;
 			//ctx.drawImage(pacmanDown1, pX, pY);
 		}
 	}
-	else
-	{
-		currentImage =pacmanClosed;
-		///ctx.drawImage(pacmanClosed, pX, pY);
-	}
-	
-	
-	
-	
+		/////////
+		
 		
 		if(ghosts[i].dir == 0)
 		{
@@ -372,22 +365,26 @@ function drawGhosts()
 				if(ghosts[i].color == 1)
 				{
 					pinkyY -= 1;
+					ctx.drawImage(ghost1Image, pinkyX, pinkyY);
 				}
 				if(ghosts[i].color == 2)
 				{
 					blueY -= 1;
+					ctx.drawImage(currentImage, pX, pY);
 				}
 				if(ghosts[i].color == 3)
 				{
 					orangeY -= 1;
+					ctx.drawImage(currentImage, pX, pY);
 				}
 				if(ghosts[i].color == 4)
 				{
 					redY -= 1;
+					ctx.drawImage(currentImage, pX, pY);
 				}
 			}
 			///up
-			ctx.drawImage(currentImage, pX, pY);
+			
 		}
 		else if(animations[i].dir == 1)
 		{
@@ -397,6 +394,7 @@ function drawGhosts()
 				if(ghosts[i].color == 1)
 				{
 					pinkyY += 1;
+					ctx.drawImage(ghost1Image, pinkyX, pinkyY);
 				}
 				if(ghosts[i].color == 2)
 				{
@@ -412,7 +410,6 @@ function drawGhosts()
 				}
 			}
 			///up
-			ctx.drawImage(currentImage, pX, pY);
 		}
 		else if(animations[i].dir == 2)
 		{
@@ -422,6 +419,7 @@ function drawGhosts()
 				if(ghosts[i].color == 1)
 				{
 					pinkyX += 1;
+					ctx.drawImage(ghost1Image, pinkyX, pinkyY);
 				}
 				if(ghosts[i].color == 2)
 				{
@@ -437,7 +435,6 @@ function drawGhosts()
 				}
 			}
 			///up
-			ctx.drawImage(currentImage, pX, pY);
 		}
 		else if(animations[i].dir == 3)
 		{
@@ -447,6 +444,7 @@ function drawGhosts()
 				if(ghosts[i].color == 1)
 				{
 					pinkyX -= 1;
+					ctx.drawImage(ghost1Image, pinkyX, pinkyY);
 				}
 				if(ghosts[i].color == 2)
 				{
@@ -462,7 +460,6 @@ function drawGhosts()
 				}
 			}
 			///up
-			ctx.drawImage(currentImage, pX, pY);
 		}
 	}
 	if(moveTimer >= 47)
