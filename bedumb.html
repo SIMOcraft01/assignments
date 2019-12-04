@@ -80,6 +80,32 @@ function getRandomInt(min, max) {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+function playSound1()
+{
+	var pop = new Audio();
+	pop.src = "d1.wav";
+	pop.play();
+}
+function playSound2()
+{
+	var pop = new Audio();
+	pop.src = "d2.wav";
+	pop.play();
+}
+function playSound3()
+{
+	var pop = new Audio();
+	pop.src = "d3.wav";
+	pop.play();
+}
+function playError()
+{
+	var pop = new Audio();
+	pop.src = "error.wav";
+	pop.play();
+}
+
 function gridObject(x, y, isSelected, value, isEmpty)
 {
 this.x = x;
@@ -220,7 +246,7 @@ checkForMatches();
 if(!matchFound)
 {
 console.log("match not found");
-error.play()
+playError();
 if(selected1Col == selected2Col)
 {
 if((selected1Row == selected2Row + 1) ||
@@ -279,7 +305,7 @@ randNums[i][j].value > 0)
 //we have a match of 5 down
 //console.log("We have a 5 match down");
 //console.log("Starting at i  j: " + i + "   " + j);
-d3.play();
+playSound3();
 score += 30;
 randNums[i][j].value = 0;
 randNums[i+1][j].value = 0;
@@ -312,7 +338,7 @@ randNums[i][j].value > 0)
 //we have a match of 5 down
 //console.log("We have a 4 match down");
 //console.log("Starting at i  j: " + i + "   " + j);
-d3.play();
+playSound3();
 score += 20;
 randNums[i][j].value = 0;
 randNums[i+1][j].value = 0;
@@ -344,7 +370,7 @@ randNums[i][j].value > 0)
 //we have a match of 5 down
 //console.log("We have a 3 match down");
 //console.log("Starting at i  j: " + i + "   " + j);
-d2.play();
+playSound2();
 score += 10;
 randNums[i][j].value = 0;
 randNums[i+1][j].value = 0;
@@ -377,7 +403,7 @@ randNums[i][j].value > 0)
 //we have a match of 5 across
 //console.log("We have a 5 match across");
 //console.log("Starting at i  j: " + i + "   " + j);
-d2.play();
+playSound2();
 score += 30;
 randNums[i][j].value = 0;
 randNums[i][j+1].value = 0;
@@ -411,7 +437,7 @@ randNums[i][j].value > 0)
 //we have a match of 5 across
 //console.log("We have a 4 match across");
 //console.log("Starting at i  j: " + i + "   " + j);
-d1.play();
+playSound1();
 score += 20;
 randNums[i][j].value = 0;
 randNums[i][j+1].value = 0;
@@ -443,7 +469,7 @@ randNums[i][j].value > 0)
 //we have a match of 5 across
 //console.log("We have a 3 match across");
 //console.log("Starting at i  j: " + i + "   " + j);
-d1.play();
+playSound1();
 score += 10;
 randNums[i][j].value = 0;
 randNums[i][j+1].value = 0;
