@@ -1,0 +1,769 @@
+<html>
+<head>
+	<style>
+	*{padding: 0; margin:0;}
+	canvas{ background: #000; display: block; margin: 0 auto;}
+	</style>
+</head>
+
+<body>
+<canvas id= "myCanvas" width="800" height="600"></canvas>
+<script type="text/javascript">
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+var map = [
+[4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3],
+[2,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,2],
+[2,7,4,1,1,1,7,1,1,1,3,7,2,7,4,1,1,1,3,7,2,7,4,1,1,1,7,1,1,1,3,7,2],
+[2,7,2,8,7,7,7,7,7,7,2,7,2,7,2,0,0,0,2,7,2,7,2,7,7,7,7,7,7,8,2,7,2],
+[2,7,2,7,4,1,7,1,3,7,2,7,2,7,6,1,0,1,5,7,2,7,2,7,4,1,7,1,3,7,2,7,2],
+[2,7,2,7,2,7,7,7,2,7,2,7,2,7,7,7,7,7,7,7,2,7,2,7,2,7,7,7,2,7,2,7,2],
+[2,7,7,7,7,7,1,7,7,7,7,7,7,7,4,1,7,1,3,7,7,7,7,7,7,7,1,7,7,7,7,7,2],
+[2,7,2,7,2,7,7,7,2,7,4,1,3,7,2,7,7,7,2,7,4,1,3,7,2,7,7,7,2,7,2,7,2],
+[2,7,2,7,6,1,7,1,5,7,2,7,2,7,2,7,2,7,2,7,2,7,2,7,6,1,7,1,5,7,2,7,2],
+[2,7,2,7,7,7,7,7,7,7,2,7,2,7,7,7,2,7,7,7,2,7,7,7,7,7,7,7,7,7,2,7,2],
+[2,7,2,7,2,7,2,7,7,7,7,7,2,7,2,7,8,7,2,7,2,7,6,1,1,1,7,1,1,7,2,7,2],
+[2,7,2,7,2,7,2,7,4,1,1,7,7,7,2,7,2,7,2,7,7,7,7,7,7,7,7,7,7,7,2,7,2],
+[2,7,0,7,2,7,2,7,2,7,7,7,7,7,7,7,9,7,7,7,7,4,1,7,1,1,7,1,3,7,7,7,2],
+[2,7,2,7,2,7,2,7,6,1,3,7,7,1,1,1,1,1,1,1,7,2,7,7,7,7,7,7,2,7,2,7,2],
+[2,7,2,7,2,7,7,7,7,7,2,7,7,7,7,7,7,7,7,7,7,2,7,4,1,1,3,7,2,7,2,7,2],
+[2,7,2,7,6,1,1,7,1,1,5,7,7,1,3,7,1,7,4,1,7,2,7,2,7,7,2,7,2,7,2,7,2],
+[2,7,2,8,7,7,7,7,7,7,7,7,7,7,2,7,0,7,2,7,7,7,7,7,7,7,7,7,7,8,2,7,2],
+[2,7,6,1,1,1,7,1,1,7,1,1,1,7,6,1,1,1,5,7,1,1,1,7,1,1,7,1,1,1,5,7,2],
+[2,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,2],
+[6,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5]
+];
+var ground = new Image();
+ground.src = "tile092.png";
+var wall1 = new Image();
+wall1.src = "tile068.png";
+var wall2 = new Image();
+wall2.src = "tile069.png";
+var wall3 = new Image();
+wall3.src = "tile066.png";
+var wall4= new Image();
+wall4.src = "tile067.png";
+var wall5 = new Image();
+wall5.src = "tile065.png";
+var wall6 = new Image();
+wall6.src = "tile064.png";
+
+var pacmanLeft1 = new Image();
+pacmanLeft1.src = "tile048.png";
+var pacmanLeft2 = new Image();
+pacmanLeft2.src = "tile050.png";
+var pacmanRight1 = new Image();
+pacmanRight1.src = "tile052.png";
+var pacmanRight2 = new Image();
+pacmanRight2.src = "tile054.png";
+var pacmanUp1 = new Image();
+pacmanUp1.src = "tile049.png";
+var pacmanUp2 = new Image();
+pacmanUp2.src = "tile051.png";
+var pacmanDown1 = new Image();
+pacmanDown1.src = "tile053.png";
+var pacmanDown2 = new Image();
+pacmanDown2.src = "tile055.png";
+var pacmanClosed = new Image();
+pacmanClosed.src = "tile112.png";
+var currentImage = new Image();
+var pinkyRight1 = new Image();
+pinkyRight1.src = "tile128.png";
+var pinkyRight2 = new Image();
+pinkyRight2.src = "tile129.png";
+var pinkyDown1 = new Image();
+pinkyDown1.src = "tile130.png";
+var pinkyDown2 = new Image();
+pinkyDown2.src = "tile131.png";
+var pinkyLeft1 = new Image();
+pinkyLeft1.src = "tile132.png";
+var pinkyLeft2 = new Image();
+pinkyLeft2.src = "tile133.png";
+var pinkyUp1 = new Image();
+pinkyUp1.src = "tile134.png";
+var pinkyUp2 = new Image();
+pinkyUp2.src = "tile135.png";
+var timer = 0;
+var upPressed = false;
+var downPressed = false;
+var leftPressed = false;
+var rightPressed = false;
+var collisionDetected = false;
+var pRow = 1;
+var pCol = 1;
+var pX = 24;
+var pY = 74;
+var canMove = true;
+var moveTimer = 0;
+var ghostMoveTimer = 0;
+var animations = [];
+var ghosts = [];
+var pinkyRow = 4;
+var pinkyCol = 16;
+var pinkyX = 96;
+var pinkyY = 434;
+var blueRow = 4;
+var blueCol = 16;
+var blueX = 96;
+var blueY = 434;
+var orangeRow = 4;
+var orangeCol = 16;
+var orangeX = 96;
+var orangeY = 434;
+var redRow = 4;
+var redCol = 16;
+var redX = 96;
+var redY = 434;
+ghosts.push(new ghostAnimation(4, 16, 4, 16, 1, 1));
+var score = 0;
+
+function keyDownHandler(e){
+	if(e.keyCode == 38)
+	{
+		upPressed = true;
+		downPressed = false;
+		rightPressed = false;
+		leftPressed = false;
+	}
+	if(e.keyCode == 40)
+	{
+		downPressed = true;
+		upPressed = false;
+		rightPressed = false;
+		leftPressed = false;
+	}
+	if(e.keyCode == 37)
+	{
+		leftPressed = true;
+		downPressed = false;
+		rightPressed = false;
+		upPressed = false;
+	}
+	if(e.keyCode == 39)
+	{
+		rightPressed = true;
+		downPressed = false;
+		upPressed = false;
+		leftPressed = false;
+	}
+	}
+	
+function keyUpHandler(e){
+	<!-- if(e.keyCode == 38) -->
+	<!-- { -->
+		<!-- upPressed = false; -->
+	<!-- } -->
+	<!-- if(e.keyCode == 40) -->
+	<!-- { -->
+		<!-- downPressed = false; -->
+	<!-- } -->
+	<!-- if(e.keyCode == 37) -->
+	<!-- { -->
+		<!-- leftPressed = false; -->
+	<!-- } -->
+	<!-- if(e.keyCode == 39) -->
+	<!-- { -->
+		<!-- rightPressed = false; -->
+	<!-- } -->
+}
+
+function Animation(sX, sY, dX, dY, direction)
+{
+this.sX = sX;
+this.sY = sY;
+this.dX = dX;
+this.dY = dY;
+this.dir = direction;
+this.moved = 0;
+}
+
+function GhostAnimation(sX, sY, dX, dY, direction, color)
+{
+this.sX = sX;
+this.sY = sY;
+this.dX = dX;
+this.dY = dY;
+this.dir = direction;
+this.color = color; ///1 for pink, 2 blue, 3 orange, 4 red
+this.moved = 0;
+}
+
+function drawScore()
+{	
+	ctx.fillStyle = "rgb(0,0,255)";
+	ctx.font = "20px Arial";
+	ctx.fillText("Score: " + score, 600, 25);
+}
+
+function Point(x, y, dir)
+{
+	this.x = x;
+	this.y = y;
+	this.d = dir;
+}
+
+function findNextClosestPoint(x1, y1)
+{
+var d1 = 100000;
+var d2 = 100000;
+var d3 = 100000;
+var d4 = 100000;
+var tempX = 0;
+var tempY = 0;
+var direction = 0; //1 = right, 2 = left, 3 = up,  4 = down
+if(map[x1+1][y] > 6 || map[x1+1][y] == 0)
+{
+	d1 = Math.sqrt(((pX - x1)*(pX - x1)) + ((pY - y1) * (pY - y1)));
+	direction = 1;
+}
+if(map[x1-1][y] > 6 || map[x1-1][y] == 0)
+{
+	d2 = Math.sqrt(((pX - x1)*(pX - x1)) + ((pY - y1) * (pY - y1)));
+	direction = 2;
+}
+if(map[x1][y+1] > 6 || map[x1][y+1] == 0)
+{
+	d3 = Math.sqrt(((pX - x1)*(pX - x1)) + ((pY - y1) * (pY - y1)));
+	direction = 3;
+}
+if(map[x1][y-1] > 6 || map[x1][y-1] == 0)
+{
+	d4 = Math.sqrt(((pX - x1)*(pX - x1)) + ((pY - y1) * (pY - y1)));
+	direction = 4;
+}
+
+if(d1 <= d2 && d1 <= d3 && d1 <= d4)
+{
+tempX = x1 + 1;
+tempY = y1;
+}
+else if(d2 <= d1 && d2 <= d3 && d2 <= d4)
+{
+tempX = x1 - 1;
+tempY = y1;
+}
+else if(d3 <= d1 && d3 <= d2 && d3 <= d4)
+{
+tempX = x1;
+tempY = y1 + 1;
+}
+else
+{
+tempX = x1;
+tempY = y1 - 1;
+}
+
+return new Point(tempX, tempY, direction);
+}
+
+function drawGhosts()
+{
+	//GhostAnimation(sX, sY, dX, dY, direction, color)
+	for(var i = 0; i < ghosts.length; i++)
+	{
+		if(ghosts[i].dir == 2)
+		{
+			if(ghostMoveTimer > 36)
+			{
+				ghost1Image = pinkyLeft1;
+				///ctx.drawImage(pacmanClosed, pX, pY);
+			}
+			else if(moveTimer > 24)
+			{
+				currentImage = pinkyLeft2;
+				///ctx.drawImage(pacmanLeft1, pX, pY);
+			}
+			else if(moveTimer > 12)
+			{
+				currentImage = pinkyLeft1;
+				//ctx.drawImage(pacmanLeft2, pX, pY);
+			}
+			else
+			{
+				currentImage = pinkyLeft2;
+				//ctx.drawImage(pacmanLeft1, pX, pY);
+			}
+	}
+	else if(rightPressed)
+	{
+		if(moveTimer > 36)
+		{
+			currentImage =pacmanClosed;
+			//ctx.drawImage(pacmanClosed, pX, pY);
+		}
+		else if(moveTimer > 24)
+		{
+			currentImage =pacmanRight1;
+			//ctx.drawImage(pacmanRight1, pX, pY);
+		}
+		else if(moveTimer > 12)
+		{
+			currentImage =pacmanRight2;
+			//ctx.drawImage(pacmanRight2, pX, pY);
+		}
+		else
+		{
+			currentImage =pacmanRight1;
+			//ctx.drawImage(pacmanRight1, pX, pY);
+		}
+	}
+	else if(upPressed)
+	{
+		if(moveTimer > 36)
+		{
+			currentImage =pacmanClosed;
+			//ctx.drawImage(pacmanClosed, pX, pY);
+		}
+		else if(moveTimer > 24)
+		{
+			currentImage =pacmanUp1;
+			//ctx.drawImage(pacmanUp1, pX, pY);
+		}
+		else if(moveTimer > 12)
+		{
+			currentImage =pacmanUp2;
+			//ctx.drawImage(pacmanUp2, pX, pY);
+		}
+		else
+		{
+			currentImage =pacmanUp1;
+			//ctx.drawImage(pacmanUp1, pX, pY);
+		}
+	}
+	else if(downPressed)
+	{
+		if(moveTimer > 36)
+		{
+			currentImage =pacmanClosed;
+			///ctx.drawImage(pacmanClosed, pX, pY);
+		}
+		else if(moveTimer > 24)
+		{
+			currentImage =pacmanDown1;
+			//ctx.drawImage(pacmanDown1, pX, pY);
+		}
+		else if(moveTimer > 12)
+		{
+			currentImage =pacmanDown2;
+			//ctx.drawImage(pacmanDown2, pX, pY);
+		}
+		else
+		{
+			currentImage =pacmanDown1;
+			//ctx.drawImage(pacmanDown1, pX, pY);
+		}
+	}
+	else
+	{
+		currentImage =pacmanClosed;
+		///ctx.drawImage(pacmanClosed, pX, pY);
+	}
+	
+	
+	
+	
+		
+		if(ghosts[i].dir == 0)
+		{
+			if(moveTimer % 2 == 0)
+			{
+				if(ghosts[i].color == 1)
+				{
+					pinkyY -= 1;
+				}
+				if(ghosts[i].color == 2)
+				{
+					blueY -= 1;
+				}
+				if(ghosts[i].color == 3)
+				{
+					orangeY -= 1;
+				}
+				if(ghosts[i].color == 4)
+				{
+					redY -= 1;
+				}
+			}
+			///up
+			ctx.drawImage(currentImage, pX, pY);
+		}
+		else if(animations[i].dir == 1)
+		{
+			//down
+			if(moveTimer % 2 == 0)
+			{
+				if(ghosts[i].color == 1)
+				{
+					pinkyY += 1;
+				}
+				if(ghosts[i].color == 2)
+				{
+					blueY += 1;
+				}
+				if(ghosts[i].color == 3)
+				{
+					orangeY += 1;
+				}
+				if(ghosts[i].color == 4)
+				{
+					redY += 1;
+				}
+			}
+			///up
+			ctx.drawImage(currentImage, pX, pY);
+		}
+		else if(animations[i].dir == 2)
+		{
+			///right
+			if(moveTimer % 2 == 0)
+			{
+				if(ghosts[i].color == 1)
+				{
+					pinkyX += 1;
+				}
+				if(ghosts[i].color == 2)
+				{
+					blueX += 1;
+				}
+				if(ghosts[i].color == 3)
+				{
+					orangeX += 1;
+				}
+				if(ghosts[i].color == 4)
+				{
+					redX += 1;
+				}
+			}
+			///up
+			ctx.drawImage(currentImage, pX, pY);
+		}
+		else if(animations[i].dir == 3)
+		{
+			///left
+			if(moveTimer % 2 == 0)
+			{
+				if(ghosts[i].color == 1)
+				{
+					pinkyX -= 1;
+				}
+				if(ghosts[i].color == 2)
+				{
+					blueX -= 1;
+				}
+				if(ghosts[i].color == 3)
+				{
+					orangeX -= 1;
+				}
+				if(ghosts[i].color == 4)
+				{
+					redX -= 1;
+				}
+			}
+			///up
+			ctx.drawImage(currentImage, pX, pY);
+		}
+	}
+	if(moveTimer >= 47)
+	{
+		//GhostAnimation(sX, sY, dX, dY, direction, color)
+		var point = findNextClosestPoint(ghosts[i].dX, ghosts[i].dY)
+		var tempGhost = new ghostAnimation(ghosts[i].dX, ghosts[i].dY, point.x, point.y, point.d, ghosts[i].color);
+		ghosts[i] = new ghostAnimation();
+	}
+}
+
+
+function drawPacman2()
+{
+	moveTimer++;
+	if(moveTimer > 47)
+	{
+		canMove = true;
+	}
+	if(upPressed)
+	{
+		if((map[pRow-1][pCol] == 0 || map[pRow-1][pCol] == 7) && canMove)
+		{
+			if( map[pRow-1][pCol] == 7)
+			{
+				
+			}
+			pRow -= 1;
+			moveTimer = 0;
+			canMove = false;
+			animations.push(new Animation(pRow, pCol, (pRow - 1), pCol, 0));
+		}
+	}
+	else if(downPressed)
+	{
+		if(( map[pRow + 1][pCol] == 0 || map[pRow + 1][pCol] == 7)  && canMove)
+		{
+			pRow += 1;
+			moveTimer = 0;
+			canMove = false;
+			animations.push(new Animation(pRow, pCol, (pRow + 1), pCol, 1));
+		}
+	}
+	else if(leftPressed)
+	{
+		if((map[pRow][pCol - 1] == 0 || map[pRow][pCol - 1] == 7)
+				&& canMove)
+		{
+			pCol -= 1;
+			moveTimer = 0;
+			canMove = false;
+			animations.push(new Animation(pRow, pCol, pRow, (pCol-1), 3));
+			
+		}
+	}
+	else if(rightPressed)
+	{
+		if((map[pRow ][pCol+ 1] == 0 || map[pRow ][pCol+ 1] == 7)
+			&& canMove)
+		{
+			pCol += 1;
+			moveTimer = 0;
+			canMove = false;
+			animations.push(new Animation(pRow, pCol, pRow, (pCol+1), 2));
+		}
+	}
+	var x = pCol * 24;
+	var y = (pRow*24) + 50;
+	if(canMove)
+	{
+		ctx.drawImage(currentImage, x, y);
+	}
+	if(map[pRow][pCol] == 7 && moveTimer >= 24)
+		{
+			map[pRow][pCol] = 0;
+			score += 10;
+		}
+}
+
+
+
+
+function drawAnimations()
+{
+	for(var i = 0; i < animations.length; i++)
+	{
+		
+		if(animations[i].dir == 0)
+		{
+			if(moveTimer % 2 == 0)
+			{
+				pY -= 1;
+			}
+			///up
+			ctx.drawImage(currentImage, pX, pY);
+		}
+		else if(animations[i].dir == 1)
+		{
+			//down
+			if(moveTimer % 2 == 0)
+			{
+				pY += 1;
+			}
+			///up
+			ctx.drawImage(currentImage, pX, pY);
+		}
+		else if(animations[i].dir == 2)
+		{
+			///right
+			if(moveTimer % 2 == 0)
+			{
+				pX += 1;
+			}
+			///up
+			ctx.drawImage(currentImage, pX, pY);
+		}
+		else if(animations[i].dir == 3)
+		{
+			///left
+			if(moveTimer % 2 == 0)
+			{
+				pX -= 1;
+			}
+			///up
+			ctx.drawImage(currentImage, pX, pY);
+		}
+	}
+	if(moveTimer >= 47)
+	{
+		animations.pop();
+	}
+}
+
+function drawPacman()
+{
+	
+	if(leftPressed)
+	{
+		if(moveTimer > 36)
+		{
+			currentImage = pacmanClosed;
+			///ctx.drawImage(pacmanClosed, pX, pY);
+		}
+		else if(moveTimer > 24)
+		{
+			currentImage = pacmanLeft1;
+			///ctx.drawImage(pacmanLeft1, pX, pY);
+		}
+		else if(moveTimer > 12)
+		{
+			currentImage = pacmanLeft2;
+			//ctx.drawImage(pacmanLeft2, pX, pY);
+		}
+		else
+		{
+			currentImage = pacmanLeft1;
+			//ctx.drawImage(pacmanLeft1, pX, pY);
+		}
+	}
+	else if(rightPressed)
+	{
+		if(moveTimer > 36)
+		{
+			currentImage =pacmanClosed;
+			//ctx.drawImage(pacmanClosed, pX, pY);
+		}
+		else if(moveTimer > 24)
+		{
+			currentImage =pacmanRight1;
+			//ctx.drawImage(pacmanRight1, pX, pY);
+		}
+		else if(moveTimer > 12)
+		{
+			currentImage =pacmanRight2;
+			//ctx.drawImage(pacmanRight2, pX, pY);
+		}
+		else
+		{
+			currentImage =pacmanRight1;
+			//ctx.drawImage(pacmanRight1, pX, pY);
+		}
+	}
+	else if(upPressed)
+	{
+		if(moveTimer > 36)
+		{
+			currentImage =pacmanClosed;
+			//ctx.drawImage(pacmanClosed, pX, pY);
+		}
+		else if(moveTimer > 24)
+		{
+			currentImage =pacmanUp1;
+			//ctx.drawImage(pacmanUp1, pX, pY);
+		}
+		else if(moveTimer > 12)
+		{
+			currentImage =pacmanUp2;
+			//ctx.drawImage(pacmanUp2, pX, pY);
+		}
+		else
+		{
+			currentImage =pacmanUp1;
+			//ctx.drawImage(pacmanUp1, pX, pY);
+		}
+	}
+	else if(downPressed)
+	{
+		if(moveTimer > 36)
+		{
+			currentImage =pacmanClosed;
+			///ctx.drawImage(pacmanClosed, pX, pY);
+		}
+		else if(moveTimer > 24)
+		{
+			currentImage =pacmanDown1;
+			//ctx.drawImage(pacmanDown1, pX, pY);
+		}
+		else if(moveTimer > 12)
+		{
+			currentImage =pacmanDown2;
+			//ctx.drawImage(pacmanDown2, pX, pY);
+		}
+		else
+		{
+			currentImage =pacmanDown1;
+			//ctx.drawImage(pacmanDown1, pX, pY);
+		}
+	}
+	else
+	{
+		currentImage =pacmanClosed;
+		///ctx.drawImage(pacmanClosed, pX, pY);
+	}
+}
+
+function drawMap()
+{
+	for(var i = 0; i < map.length; i++)
+	{
+		for(var j = 0; j < map[i].length; j++)
+		{
+			var x = j * 24;
+			var y = (i*24) + 50;
+			if(map[i][j] == 0)
+			{
+				ctx.drawImage(ground, x, y);
+			}
+			else if(map[i][j] == 1)
+			{
+				ctx.drawImage(wall6, x, y);
+			}
+			else if(map[i][j] == 2)
+			{
+				ctx.drawImage(wall5, x, y);
+			}
+			else if(map[i][j] == 3)
+				{
+					ctx.drawImage(wall2, x, y);
+				}
+			else if(map[i][j] == 4)
+				{
+					ctx.drawImage(wall1, x, y);
+				}
+			
+			else if(map[i][j] == 5)
+				{
+					ctx.drawImage(wall4, x, y);
+				}
+		
+			else if(map[i][j] == 6)
+				{
+					ctx.drawImage(wall3, x, y);
+				}
+			else if(map[i][j] == 7)
+				{
+					ctx.fillStyle = "pink";
+					ctx.beginPath();
+					ctx.arc(x + 12, y +12, 2.0, 0, Math.PI*2);
+					ctx.stroke();
+					ctx.fill();
+				}
+		}
+		}
+	}
+
+
+
+function draw()
+{
+	ctx.clearRect(0,0,800,600);	
+	drawPacman();
+	drawPacman2();
+	drawMap();
+	drawAnimations();
+	drawScore();
+	console.log("The amount of animations : " + animations.length);
+}
+
+setInterval(draw, 2);
+
+
+</script>
+</body>
+</html>
