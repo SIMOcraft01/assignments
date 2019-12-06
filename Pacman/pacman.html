@@ -215,22 +215,22 @@ var tempRow = 0;
 var direction = 0; //0 = up, 1 =down, 2 = right, 3 = left
 if(map[x1+1][y1] > 6 || map[x1+1][y1] == 0)
 {
-	d1 = Math.sqrt(((pRow - x1 +1 )*(pRow - x1 +1 )) + ((pCol - y1) * (pCol - y1)));
+	d1 = Math.sqrt(((pCol - x1 +1 )*(pCol - x1 +1 )) + ((pRow - y1) * (pRow - y1)));
 	console.log("Distance down = " + d1);
 }
 if(map[x1-1][y1] > 6 || map[x1-1][y1] == 0)
 {
-	d2 = Math.sqrt(((pRow - x1 -1)*(pRow - x1 -1)) + ((pCol - y1) * (pCol - y1)));
+	d2 = Math.sqrt(((pCol - x1 -1)*(pCol - x1 -1)) + ((pRow - y1) * (pRow - y1)));
 	console.log("Distance up = " + d2);
 }
 if(map[x1][y1+1] > 6 || map[x1][y1+1] == 0)
 {
-	d3 = Math.sqrt(((pRow - x1)*(pRow - x1)) + ((pCol - y1 +1 ) * (pCol - y1 +1)));
+	d3 = Math.sqrt(((pCol - x1)*(pCol - x1)) + ((pRow - y1 +1 ) * (pRow - y1 +1)));
 	console.log("Distance right = " + d3);
 }
 if(map[x1][y1-1] > 6 || map[x1][y1-1] == 0)
 {
-	d4 = Math.sqrt(((pRow - x1)*(pRow - x1)) + ((pCol - y1-1) * (pCol - y1-1)));
+	d4 = Math.sqrt(((pCol - x1)*(pCol - x1)) + ((pRow - y1-1) * (pRow - y1-1)));
 	console.log("Distance left = " + d4);
 }
 
@@ -239,28 +239,28 @@ if(d1 <= d2 && d1 <= d3 && d1 <= d4)
 tempRow = x1 + 1;
 tempCol = y1;
 direction = 1;
-console.log("Chose distance 1");
+console.log("Chose distance 1/down");
 }
 else if(d2 <= d1 && d2 <= d3 && d2 <= d4)
 {
 tempRow = x1 - 1;
 tempCol = y1;
 direction = 0;
-console.log("Chose distance 2");
+console.log("Chose distance 2/up");
 }
 else if(d3 <= d1 && d3 <= d2 && d3 <= d4)
 {
 tempRow = x1;
 tempCol = y1 + 1;
 direction = 2;
-console.log("Chose distance 3");
+console.log("Chose distance 3/right");
 }
 else
 {
 tempRow = x1;
 tempCol = y1 - 1;
 direction = 3;
-console.log("Chose distance 4");
+console.log("Chose distance 4/left");
 ghostMoveTimer = 0;
 }
 
