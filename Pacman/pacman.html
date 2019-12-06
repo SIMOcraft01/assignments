@@ -287,6 +287,8 @@ function drawGhosts()
 			///y is equal to row
 		var b1 = (ghosts[i].sY*24) === pinkyX;
 		var b2 = (ghosts[i].sX*24) + 50 === pinkyY
+		pinkyX = (ghosts[i].sY*24);
+		pinkyY = (ghosts[i].sX*24) + 50;
 		console.log("The row and Y match: " + b2);
 		console.log("The column and X match: " + b1);
 	}	
@@ -391,8 +393,7 @@ function drawGhosts()
 			{
 				if(ghosts[i].color == 1)
 				{
-					pinkyY -= 1;
-					ctx.drawImage(ghost1Image, pinkyX, pinkyY);
+					pinkyX -= 1;
 				}
 				if(ghosts[i].color == 2)
 				{
@@ -420,8 +421,7 @@ function drawGhosts()
 			{
 				if(ghosts[i].color == 1)
 				{
-					pinkyY += 1;
-					ctx.drawImage(ghost1Image, pinkyX, pinkyY);
+					pinkyX += 1;
 				}
 				if(ghosts[i].color == 2)
 				{
@@ -445,8 +445,7 @@ function drawGhosts()
 			{
 				if(ghosts[i].color == 1)
 				{
-					pinkyX += 1;
-					ctx.drawImage(ghost1Image, pinkyX, pinkyY);
+					pinkyY += 1;
 				}
 				if(ghosts[i].color == 2)
 				{
@@ -470,8 +469,7 @@ function drawGhosts()
 			{
 				if(ghosts[i].color == 1)
 				{
-					pinkyX -= 1;
-					ctx.drawImage(ghost1Image, pinkyX, pinkyY);
+					pinkyY -= 1;
 				}
 				if(ghosts[i].color == 2)
 				{
@@ -488,8 +486,9 @@ function drawGhosts()
 			}
 			///up
 		}
+		ctx.drawImage(ghost1Image, pinkyX, pinkyY);
 	
-	if(moveTimer > 46)
+	if(ghostMoveTimer > 46)
 	{
 		//GhostAnimation(sX, sY, dX, dY, direction, color)
 		var point = findNextClosestPoint(ghosts[i].dX, ghosts[i].dY)
@@ -504,8 +503,11 @@ function drawGhosts()
 		ghosts[i].dX = point.x;
 		console.log("Point column is: " + point.x);
 		ghosts[i].dY = point.y;
-		console.log("Point row is: " + point.x);
+		console.log("Point row is: " + point.y);
 		ghosts[i].dir = point.d;
+		pinkyY = (ghosts[i].sY*24);
+		pinkyX = (ghosts[i].sX*24) + 50;
+		ghostMoveTimer = 0;
 	}
 	}
 }
@@ -791,6 +793,7 @@ function draw()
 	drawAnimations();
 	drawScore();
 	console.log("The amount of animations : " + animations.length);
+	console.log("The amount of ghosts : " + ghosts.length);
 }
 
 setInterval(draw, 2);
