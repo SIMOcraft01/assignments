@@ -1,0 +1,171 @@
+function drawBullets()
+{
+	for(var i = 0; i < bullets.length; i++)
+	{
+		//console.log("this is firing");
+	    ctx.fillStyle = "red";
+		ctx.fillRect(bullets[i].x, bullets[i].y, 3, 3);
+		bullets[i].x += bullets[i].speed * Math.cos(bullets[i].rotation * Math.PI / 180);
+		bullets[i].y += bullets[i].speed * Math.sin(bullets[i].rotation * Math.PI / 180);
+		if(bullets[i].x <= 0 +3)
+		{
+			bullets[i].rotation = (bullets[i].rotation * (-1)) + 180;
+		}
+		if(bullets[i].x >= 800 -3)
+		{
+			bullets[i].rotation = (bullets[i].rotation * (-1)) + 180;
+		}
+		if(bullets[i].y <= 0 +3)
+		{
+			bullets[i].rotation = (bullets[i].rotation * (-1)) + 360;
+		}
+		if(bullets[i].y >= 600 -3)
+		{
+			bullets[i].rotation = (bullets[i].rotation * (-1)) + 360;
+		}
+		///Create the two objects needed to be tested
+		///x'=(x−p)cos(θ)−(y−q)sin(θ)+p
+		///y'=(x−p)sin(θ)+(y−q)cos(θ)+q
+		///each square has 4 points...
+		///between each point is an edge define by
+		///point 2 X - point 1 X, point 2 Y - point 1 Y
+		///p = x/2
+		///q = y/2
+		
+		///All polygonal collision code was adapted from:
+		///http://programmerart.weebly.com/separating-axis-theorem.html
+		var Bp1 = bullets[i].x + 2/2;;
+		var Bq1 = bullets[i].y + 2/2;
+		var Bx1 = bullets[i].x;
+		var By1 = bullets[i].y;
+		var Bx2 = bullets[i].x + 2;
+		var By2 = bullets[i].y;
+		var Bx3 = bullets[i].x;
+		var By3 = bullets[i].y + 2;
+		var Bx4 = bullets[i].x + 2;
+		var By4 = bullets[i].y + 2;
+		var Btheta = bullets[i].rotation * Math.PI / 180;
+		//var bx1 = (Bx1−Bp1) * Math.cos(Btheta)−(By1−Bq1) * Math.sin(Btheta)+Bp1;
+		var bx1 = (Bx1 - Bp1) * Math.cos(Btheta) - (By1 - Bq1) * Math.sin(Btheta) + Bp1;
+		var by1 = (Bx1 - Bp1) * Math.sin(Btheta) - (By1 - Bq1) * Math.cos(Btheta) + Bq1;
+		var bx2 = (Bx2 - Bp1) * Math.cos(Btheta) - (By2 - Bq1) * Math.sin(Btheta) + Bp1;
+		var by2 = (Bx2 - Bp1) * Math.sin(Btheta) - (By2 - Bq1) * Math.cos(Btheta) + Bq1;
+		var bx3 = (Bx3 - Bp1) * Math.cos(Btheta) - (By3 - Bq1) * Math.sin(Btheta) + Bp1;
+		var by3 = (Bx3 - Bp1) * Math.sin(Btheta) - (By3 - Bq1) * Math.cos(Btheta) + Bq1;
+		var bx4 = (Bx4 - Bp1) * Math.cos(Btheta) - (By4 - Bq1) * Math.sin(Btheta) + Bp1;
+		var by4 = (Bx4 - Bp1) * Math.sin(Btheta) - (By4 - Bq1) * Math.cos(Btheta) + Bq1;
+		///Same vertices and edges for each player
+		var p1 = player1X + player1W/2;
+		var q1 = player1Y + player1H/2;
+		var x1 = player1X;
+		var y1 = player1Y;
+		var x2 = player1X + player1W;
+		var y2 = player1Y;
+		var x3 = player1X;
+		var y3 = player1Y + player1H;
+		var x4 = player1X + player1W;
+		var y4 = player1Y + player1H;
+		var theta = player1Rotation * Math.PI / 180;
+		var p1x1 = (x1-p1) * Math.cos(theta)-(y1-q1) * Math.sin(theta)+p1;
+		var p1y1 = (x1-p1) * Math.sin(theta)-(y1-q1) * Math.cos(theta)+q1;
+		var p1x2 = (x2-p1) * Math.cos(theta)-(y2-q1) * Math.sin(theta)+p1;
+		var p1y2 = (x2-p1) * Math.sin(theta)-(y2-q1) * Math.cos(theta)+q1;
+		var p1x3 = (x3-p1) * Math.cos(theta)-(y3-q1) * Math.sin(theta)+p1;
+		var p1y3 = (x3-p1) * Math.sin(theta)-(y3-q1) * Math.cos(theta)+q1;
+		var p1x4 = (x4-p1) * Math.cos(theta)-(y4-q1) * Math.sin(theta)+p1;
+		var p1y4 = (x4-p1) * Math.sin(theta)-(y4-q1) * Math.cos(theta)+q1;
+		var polygonAVertices = [
+			 new xy(p1x1,p1y1),
+			 new xy(p1x2,p1y2),
+			 new xy(p1x4,p1y4),
+			 new xy(p1x3,p1y3)]
+		var polygonAEdges = [
+			 new xy(p1x2 - p1x1,p1y2 - p1y1),
+			 new xy(p1x4 - p1x2,p1y4 - p1y2),
+			 new xy(p1x3 - p1x4,p1y3 - p1y4),
+			 new xy(p1x1 - p1x3,p1y1 - p1y3)]
+		var polygonBVertices = [
+			 new xy(bx1,by1),
+			 new xy(bx2,by2),
+			 new xy(bx4,by4),
+			 new xy(bx3,by3)]
+		var polygonBEdges = [
+			 new xy(bx2 - bx1,by2 - by1),
+			 new xy(bx4 - bx2,by4 - by2),
+			 new xy(bx3 - bx4,by3 - by4),
+			 new xy(bx1 - bx3,by1 - by3)]
+var polygonA = new polygon(polygonAVertices,
+                           polygonAEdges)
+var polygonB = new polygon(polygonBVertices,
+                           polygonBEdges)
+	
+	
+	if(sat(polygonA, polygonB))
+	{
+		console.log("A collision is happening");
+	}
+	}
+	
+}
+
+function sat(polygonA,polygonB)
+			{
+				var perpendicularLine = null;
+				var dot=0;
+				var perpendicularStack=[];
+				var amin=null;
+				var amax=null;
+				var bmin=null;
+				var bmax=null;
+				for(var i=0;i<polygonA.edge.length;i++)
+				{
+					perpendicularLine=new xy(-polygonA.edge[i].y,polygonA.edge[i].x);
+					perpendicularStack.push(perpendicularLine);
+				}
+				for(var i=0;i<polygonB.edge.length;i++)
+				{
+					perpendicularLine=new xy(-polygonB.edge[i].y,polygonB.edge[i].x);
+					perpendicularStack.push(perpendicularLine);
+				}
+				for(var i=0; i<perpendicularStack.length;i++)
+				{					
+					amin=null;
+					amax=null;
+					bmin=null;
+					bmax=null;
+					for(var j=0; j<polygonA.vertex.length;j++)
+					{
+						dot=polygonA.vertex[j].x*perpendicularStack[i].x+polygonA.vertex[j].y*perpendicularStack[i].y;
+						if(amax===null||dot>amax)
+						{
+							amax=dot;
+						}
+						if(amin===null||dot<amin)
+						{
+							amin=dot;
+						}
+					}
+					for(var j=0; j<polygonB.vertex.length;j++)
+					{
+						dot=polygonB.vertex[j].x*perpendicularStack[i].x+polygonB.vertex[j].y*perpendicularStack[i].y;
+						if(bmax===null||dot>bmax)
+						{
+							bmax=dot;
+						}
+						if(bmin===null||dot<bmin)
+						{
+							bmin=dot;
+						}
+					}
+					
+					if((amin<bmax&&amin>bmin)||(bmin<amax&&bmin>amin))
+					{
+						continue;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				return true;
+			};
